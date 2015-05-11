@@ -141,8 +141,8 @@ C:\Python27\python
 to see the results of the preprocessing. 
 
 9.) Run the remainder of the file to train a deep neural network for digit
-classification. This step might take a while depending on the hardware used
-- with the above mentioned configuration (Dual Intel Xeon E5-2667 @ 2.9 GHz,
+classification. This step might take a while depending on the hardware used,
+with the above mentioned configuration (Dual Intel Xeon E5-2667 @ 2.9 GHz,
 128G RAM) and cpu_count=12, it completed in approximately 2.5 hours.
 
 NOTE: On Windows running Anaconda Python 2.7, OpenCV is not installable 
