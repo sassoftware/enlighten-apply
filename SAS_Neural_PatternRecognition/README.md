@@ -16,7 +16,7 @@ limitations under the License.
 
 ******************************************************************************/
 
-SAS_Pattern_Recognition_Examples
+SAS_Neural_PatternRecognition
 
 ===============
 
@@ -46,13 +46,14 @@ digit_classifier.sas
 
 ===============
 
-1.) Download (and unzip) or clone the SAS_Deep_Learning_Examples repository 
-to a directory referred to as {WORK_DIR}.
+1.) Download (and unzip) or clone the enlighten-apply repository. 
+This subdirectory will be referred to as {WORK_DIR}.
 
 2.) Unzip example data file (data.zip) so that the following files are 
 extracted to {WORK_DIR}\data
 
 digits_train_sample.csv
+
 digits_train_sample.sas7bdat
 
 3.) Open the digit_classifier.sas file in a standard DMS SAS Session. 
@@ -82,8 +83,8 @@ to a 1-layer MLP neural network to be classified.
 
 It is very typical for a neural network to achieve 100% training accuracy as 
 should occur here. After being correctly tuned SAS technologies, especially
-PROC NEURAL and HPNEURAL, should achieve 98-99% correct classification for 
-hold-out sets on this and other popular pattern recognition problems. Also, 
+PROC NEURAL and HPNEURAL, should achieve a high rate of correct classification
+for hold-out sets on this popular pattern recognition problems. Also, 
 convolutional neural networks are the state-of-the-art in pattern recognition. 
 PROCs NEURAL and HPNEURAL do not support this architecture. 
 
@@ -98,12 +99,13 @@ with the following packages:
 - OpenCV
 - NumPy
 
-1.) Download (and unzip) or clone the SAS_Deep_Learning_Examples repository 
-to a directory referred to as {WORK_DIR}.
+1.) Download (and unzip) or clone the enlighten-apply repository. 
+This subdirectory will be referred to as {WORK_DIR}.
 
-2.) Compile provided Java class in {WORK_DIR}\src\dev directory. To do that, 
-change directories to {WORK_DIR} and issue the following javac command. 
-This operation assumes JDK is part of the PATH environment variable.
+2.) Compile the provided Java class from the {WORK_DIR}\src\dev directory.
+To do that, change directories to {WORK_DIR} and issue the following
+javac command. This operation assumes JDK is part of the PATH environment
+variable.
 
 cd {WORK_DIR}
 javac src/dev/* -d bin
@@ -122,24 +124,25 @@ See http://support.sas.com/resources/papers/proceedings12/008-2012.pdf pages
 	
 4.) Open the digit_classifier_advanced.sas file in a standard DMS SAS Session. 
 
-5.) Set the git_repo_dir macro variable to the (unzipped!) directory of the 
-downloaded repository {WORK_DIR}.
+5.) Set the git_repo_dir macro variable to this (unzipped!) subdirectory of the 
+downloaded repository, i.e. {WORK_DIR}.
 
 6.) Set the cpu_count macro variable to an integer less than or equal to the
 number of physical CPU cores on your system. 
 
-7.) Set the python_exec_command macro variable to your systems Python 
+7.) Set the python_exec_command macro variable to your system's Python 
 executable, for instance
 
 C:\Python27\python
+
 /usr/bin/python
 
 8.) Submit the file until the %view_inputs(&train_set., 27) call at line 160 
 to see the results of the preprocessing. 
 
 9.) Run the remainder of the file to train a deep neural network for digit
-classification. This step might take a while depending on the hardware used
-- with the above mentioned configuration (Dual Intel Xeon E5-2667 @ 2.9 GHz,
+classification. This step might take a while depending on the hardware used,
+with the above mentioned configuration (Dual Intel Xeon E5-2667 @ 2.9 GHz,
 128G RAM) and cpu_count=12, it completed in approximately 2.5 hours.
 
 NOTE: On Windows running Anaconda Python 2.7, OpenCV is not installable 
@@ -156,8 +159,8 @@ b.) Extract opencv-2.4.10.exe to a directory and copy file under
 Discussion of Results:
 
 This is an advanced example of pattern recognition using an easy data set of 
-digit images, using Python to preprocess the digit images, and a 3 layer 
-(i.e. "deep") neural network to classify the digit images. 
+digit images, using Python to preprocess the digit images, and a 3 layer
+neural network to classify the digit images. 
 
 The sample MNIST data is part of a famous data set that contains thousands of 
 handwritten digit images with labels from 0 through 9. Correctly labeling
@@ -178,8 +181,8 @@ neural networks and often prevents all the layers of deep neural networks from
 being trained together simultaneously.
 
 It is very typical for a neural network to achieve 100% training accuracy as 
-should occur here. After being correctly tuned SAS technologies, especially
-PROC NEURAL and HPNEURAL, should achieve 98-99% correct classification for 
-hold-out sets on this and other popular pattern recognition problems. Also, 
+should occur here. After being correctly tuned, SAS technologies especially
+PROC NEURAL and HPNEURAL, should achieve a high rate of correct classification
+for hold-out sets on this popular pattern recognition problems. Also, 
 convolutional neural networks are the state-of-the-art in pattern recognition. 
 PROCs NEURAL and HPNEURAL do not support this architecture.
