@@ -1,0 +1,8 @@
+*.png
+part*.csv
+procedureCV.csv
+procedureDiff.csv
+*.docx
+*.zip
+Thumbs.db
+*.doc*
