@@ -15,7 +15,7 @@ limitations under the License.
 
 ******************************************************************************/
 
-Code and materials for my solution to the Spring 2014 Cloudera Data Science
+Code and materials for a solution to the Spring 2014 Cloudera Data Science
 Challenge
 
 ========================
@@ -43,6 +43,7 @@ Miner 13.1, and SAS Text Miner 13.1.
 ========================
 
 ccp-ds-assoc-viz.spk
+
 ccp-ds-assoc-viz.xml
 
 ========================
