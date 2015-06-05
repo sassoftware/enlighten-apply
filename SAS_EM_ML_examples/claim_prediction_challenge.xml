@@ -1,0 +1,561 @@
+<?xml version="1.0" encoding="UTF-8"?><_ROOT_ EMVERSION="13.2" ORIENTATION="HORIZONTAL">
+<Workspace>
+<NODES>
+<NODE CLASS="SASHELP.EMUTIL.CONTROLPOINT.CLASS" COMPONENT="ControlPoint" ID="CNTRL" X="679" Y="722" DESCRIPTION="Control Point" DIAGRAMID="_ROOT_" PARENTID="">
+<PROPERTIES/>
+</NODE>
+<NODE CLASS="SASHELP.EMMDFY.EMDROP.CLASS" COMPONENT="Drop" ID="Drop" X="288" Y="722" DESCRIPTION="Drop" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="MODIFY" TOOLPREFIX="Drop">
+<PROPERTIES DropFromTable="Y" DropHidden="Y" DropInput="N" DropTarget="N" DropRejected="Y" DropAssess="N" DropPredict="N" DropFreq="N" DropClassification="N" DropResidual="N" DropOther="N" ForceRun="N" RunAction="Train" Component="Drop">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmVariableAttributes>
+<DELTA Variable="Calendar_Year" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="Cat2" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="Cat2_" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="Cat4" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="Cat4A" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="Cat9" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="Household_ID" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="IMP_OrdCat" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="Model_Year" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="NVVar1" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="NVVar2" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="NVVar3" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="NVVar4" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="Row_ID" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="STD_REP_Var2" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="STD_REP_Var3" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="STD_REP_Var5" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="STD_REP_Var6" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="STD_REP_Var7" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="TG_Cat1" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="TG_Cat10" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="TG_Cat10A" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="TG_Cat10B" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="TG_Cat11" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="TG_Cat1B" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="TG_Cat3" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="TG_Cat5" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="TG_Cat5A" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="TG_Cat5_" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="TG_Cat6" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="TG_Cat7" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="TG_Cat7C" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="TG_Cat7_" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="TG_Cat8" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="TG_Cat8A" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="TG_IMP_Cat12" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="TG_NVCat" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="Var1" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="Var2" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="Var3" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="Var4" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="Var5" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="Var6" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="Var7" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="Var8" AttributeName="DROP" AttributeValue="Y"/>
+<DELTA Variable="_WARN_" AttributeName="DROP" AttributeValue="Y"/>
+</EmVariableAttributes>
+<EmFileProperties>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMCORE.EMCODETOOL.CLASS" COMPONENT="SASCode" ID="EMCODE" X="288" Y="479" DESCRIPTION="Generate Binary Categories" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="UTILITY" TOOLPREFIX="EMCODE">
+<PROPERTIES UsePriors="Y" ToolType="UTILITY" DataNeeded="N" PublishCode="PUBLISH" ScoreCodeFormat="DATASTEP" MetaAdvisor="BASIC" ForceRun="N" RunAction="Train" Component="SASCode" Interactive="">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmVariableAttributes/>
+<EmFileProperties>
+<USERTRAINCODE Type="EXTERNAL" Extension="sas">
+<Data><![CDATA[
+******************************************************************************;
+* Copyright (c) 2015 by SAS Institute Inc., Cary, NC 27513 USA               *;
+*                                                                            *;
+* Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);            *;
+* you may not use this file except in compliance with the License.           *;
+* You may obtain a copy of the License at                                    *;
+*                                                                            *;
+*   http://www.apache.org/licenses/LICENSE-2.0                               *;
+*                                                                            *;
+* Unless required by applicable law or agreed to in writing, software        *;
+* distributed under the License is distributed on an &quot;AS IS&quot; BASIS,          *;
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *;
+* See the License for the specific language governing permissions and        *;
+* limitations under the License.                                             *;
+******************************************************************************;
+
+*** GENERATES BINARY DUMMY VARIABLES FOR AN ENTERPRISE MINER INPUT SET *******;
+*** ATTEMPTS TO USE VARIABLE LEVEL IN NEW NAME;
+
+*** CONSTRUCT A SET CONTAINING BINARY VARIABLE METADATA;
+proc dmdb data=&amp;EM_IMPORT_DATA classout= &amp;EM_NODEID._bin;
+	class %EM_BINARY_INPUT;
+run;
+
+*** CREATE IF STATMENTS FOR NEW VARIABLES;
+data &amp;EM_NODEID._bin;
+	set &amp;EM_NODEID._bin end= eof;
+	/* TAKES CARE OF NAME LENGHT RESTRICTIONS */
+	length line $255 short_name clean_level $16 new_name $32; 
+	file &quot;%sysfunc(pathname(WORK))&amp;EM_DSEP.if_stmt_bin.sas&quot;;
+	short_name= name;
+	/* DO NOT MAKE PERFECTLY CORRELATED PAIRS OF BINARY VARS! */
+	if mod(_n_,2)= 0 then do;  
+		if TYPE= 'N' then do;
+			/* NEGATIVE NUMERICAL VARS */
+			if level ge 0 then clean_level= strip(level); 
+			else clean_level= strip('m'||compress(level, ' -'));
+			new_name= strip(compress(
+				short_name||clean_level, ' '));
+			line= 'if '||strip(name)||'= '||strip(level)||' then '
+				||strip(new_name)||'= 1; else '
+				||strip(new_name)||'= -1;';
+			put line;
+		end;
+		else do;
+			clean_level= translate(translate(strip(level), 
+				'_______________________________',
+				' &lt;,&gt;.?/:;{}[]|\~%&quot;!@#$%^&amp;*()-+='), '_', &quot;'&quot;);
+			new_name= strip(compress(
+				short_name||clean_level, ' '));
+			line= 'if upcase('||strip(name)||&quot;)= '&quot;||strip(level)
+				||&quot;' then &quot;||strip(new_name)||'= 1; else '||
+				strip(new_name)||'= -1;';
+			put line;
+		end;
+	end;
+run;
+
+*** CONSTRUCT A SET CONTAINING CLASS VARIABLE METADATA;
+proc dmdb data=&amp;EM_IMPORT_DATA classout= &amp;EM_NODEID._nom;
+	class %EM_NOMINAL_INPUT %EM_ORDINAL_INPUT;
+run;
+
+*** CREATE IF STATMENTS FOR NEW VARIABLES;
+data &amp;EM_NODEID._nom;
+	set &amp;EM_NODEID._nom end= eof;
+	length line $255 short_name clean_level $16 new_name $32;
+	file &quot;%sysfunc(pathname(WORK))&amp;EM_DSEP.if_stmt_nom.sas&quot;;
+	short_name= name;
+	if TYPE= 'N' then do;
+		if level ge 0 then clean_level= strip(level);
+		else clean_level= strip('m'||compress(level, ' -'));
+		new_name= strip(compress(short_name||clean_level, ' '));
+		line= 'if '||strip(name)||'= '||strip(level)||' then '||
+			strip(new_name)||'= 1; else '||strip(new_name)||
+			'= -1;';
+		put line;
+	end;
+	else do;
+		clean_level= translate(translate(strip(level),
+			'_______________________________',
+			' &lt;,&gt;.?/:;{}[]|\~%&quot;!@#$%^&amp;*()-+='), '_', &quot;'&quot;);
+		new_name= strip(compress(short_name||clean_level, ' '));
+		line= 'if '||strip(name)||&quot;= '&quot;||strip(level)||&quot;' then &quot;||
+			strip(new_name)||'= 1; else '||strip(new_name)||
+			'= -1;';
+		put line;
+	end;
+run;
+
+*** EXECUTE EXPANSION OF DUMMY VARIABLES;
+
+data &amp;EM_EXPORT_TRAIN; /* FINAL OUTPUT WITH ALL NEW VARIABLES */
+	set &amp;EM_IMPORT_DATA; /* INPUT DATA */
+	%include &quot;%sysfunc(pathname(WORK))&amp;EM_DSEP.if_stmt_bin.sas&quot;;
+	%include &quot;%sysfunc(pathname(WORK))&amp;EM_DSEP.if_stmt_nom.sas&quot;;
+run;
+
+*** CHANGE METADATA;
+%macro update_metadata;
+
+	*** REJECT BINARY;
+	%if (&amp;EM_NUM_BINARY_INPUT) %then %do;
+		%do m= 1 %to &amp;EM_NUM_BINARY_INPUT;
+		%EM_METACHANGE(
+			NAME= %scan(%EM_BINARY_INPUT, &amp;m),
+			ROLE= REJECTED
+		);
+		%end;
+	%end;
+
+	*** REJECT NOMINAL;
+	%if (%eval(&amp;EM_NUM_NOMINAL_INPUT + &amp;EM_NUM_ORDINAL_INPUT)) %then %do;
+		%do m= 1 %to %eval(&amp;EM_NUM_NOMINAL_INPUT + &amp;EM_NUM_ORDINAL_INPUT);
+			%EM_METACHANGE(
+				NAME= %scan(%EM_NOMINAL_INPUT %EM_ORDINAL_INPUT, &amp;m),
+				ROLE= REJECTED
+			);
+		%end;
+	%end;
+
+	data &amp;EM_NODEID._newclass;
+		set &amp;EM_NODEID._bin;
+		if mod(_n_,2)= 0 then output;
+	run;
+	proc append
+		base= &amp;EM_NODEID._newclass
+		data= &amp;EM_NODEID._nom
+		force;
+	run;
+
+	*** UPDATE NEW VARIABLES;
+	%EM_VARMACRO(
+		NAME= EM_NEW_BIN_VAR,
+		METADATA= &amp;EM_NODEID._newclass,
+		KEY= NEW_NAME,
+		NUMMACRO= EM_NUM_NEW_BIN_VAR
+	);
+
+	%if (&amp;EM_NUM_NEW_BIN_VAR) %then %do;
+		%do m= 1 %to &amp;EM_NUM_NEW_BIN_VAR;
+			%EM_METACHANGE(
+				NAME= %scan(%EM_NEW_BIN_VAR, &amp;m),
+				ROLE= INPUT,
+				LEVEL= BINARY
+			);
+		%end;
+	%end;
+
+%mend;
+%update_metadata;
+]]>
+</Data>
+</USERTRAINCODE>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMCORE.EMCODETOOL.CLASS" COMPONENT="SASCode" ID="EMCODE2" X="286" Y="636" DESCRIPTION="Binary to Interval" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="UTILITY" TOOLPREFIX="EMCODE">
+<PROPERTIES UsePriors="Y" ToolType="UTILITY" DataNeeded="N" PublishCode="PUBLISH" ScoreCodeFormat="DATASTEP" MetaAdvisor="BASIC" ForceRun="N" RunAction="Train" Component="SASCode">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmVariableAttributes/>
+<EmFileProperties>
+<USERTRAINCODE Type="EXTERNAL" Extension="sas">
+<Data><![CDATA[
+******************************************************************************;
+* Copyright (c) 2015 by SAS Institute Inc., Cary, NC 27513 USA               *;
+*                                                                            *;
+* Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);            *;
+* you may not use this file except in compliance with the License.           *;
+* You may obtain a copy of the License at                                    *;
+*                                                                            *;
+*   http://www.apache.org/licenses/LICENSE-2.0                               *;
+*                                                                            *;
+* Unless required by applicable law or agreed to in writing, software        *;
+* distributed under the License is distributed on an &quot;AS IS&quot; BASIS,          *;
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *;
+* See the License for the specific language governing permissions and        *;
+* limitations under the License.                                             *;
+******************************************************************************;
+
+*** AUTOMATICALLY CONVERT NEW, NUMERIC BINARIES TO INTERVAL ROLE *************; 
+*** FOR USE IN CLUSTERING;
+
+%macro binary_to_interval;
+ 
+	%if (&amp;EM_NUM_BINARY_INPUT) %then %do;
+		%do i= 1 %to &amp;EM_NUM_BINARY_INPUT;
+			%EM_METACHANGE(
+				NAME= %scan(%EM_BINARY_INPUT, &amp;i),
+				LEVEL= INTERVAL
+			);
+		%end;
+	%end;
+ 
+%mend;
+%binary_to_interval;
+]]>
+</Data>
+</USERTRAINCODE>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMCORE.EMCODETOOL.CLASS" COMPONENT="SASCode" ID="EMCODE3" X="487" Y="802" DESCRIPTION="ABC" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="UTILITY" TOOLPREFIX="EMCODE">
+<PROPERTIES UsePriors="Y" ToolType="UTILITY" DataNeeded="N" PublishCode="PUBLISH" ScoreCodeFormat="DATASTEP" MetaAdvisor="BASIC" ForceRun="N" RunAction="Train" Component="SASCode">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmVariableAttributes/>
+<EmFileProperties>
+<USERTRAINCODE Type="EXTERNAL" Extension="sas">
+<Data><![CDATA[
+******************************************************************************;
+* Copyright (c) 2015 by SAS Institute Inc., Cary, NC 27513 USA               *;
+*                                                                            *;
+* Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);            *;
+* you may not use this file except in compliance with the License.           *;
+* You may obtain a copy of the License at                                    *;
+*                                                                            *;
+*   http://www.apache.org/licenses/LICENSE-2.0                               *;
+*                                                                            *;
+* Unless required by applicable law or agreed to in writing, software        *;
+* distributed under the License is distributed on an &quot;AS IS&quot; BASIS,          *;
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *;
+* See the License for the specific language governing permissions and        *;
+* limitations under the License.                                             *;
+******************************************************************************;
+
+*** CALCULATE ABC (SINGLE-MACHINE/SMP) ***************************************;
+*** TO BE RUN IN EM SAS CODE NODE;
+
+proc hpclus 
+	data= &amp;EM_IMPORT_DATA maxclusters= 20 maxiter= 15
+		noc= abc(b= 25 minclusters= 1 align= none criterion= all);
+	input %EM_INTERVAL_INPUT;
+	/* FILL IN THREADS */
+	performance nthreads= 1;
+run;
+]]>
+</Data>
+</USERTRAINCODE>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMCORE.EMCODETOOL.CLASS" COMPONENT="SASCode" ID="EMCODE4" X="480" Y="722" DESCRIPTION="CCC" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="UTILITY" TOOLPREFIX="EMCODE">
+<PROPERTIES UsePriors="Y" ToolType="UTILITY" DataNeeded="N" PublishCode="PUBLISH" ScoreCodeFormat="DATASTEP" MetaAdvisor="BASIC" ForceRun="N" RunAction="Train" Component="SASCode">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmVariableAttributes/>
+<EmFileProperties>
+<USERTRAINCODE Type="EXTERNAL" Extension="sas">
+<Data><![CDATA[
+******************************************************************************;
+* Copyright (c) 2015 by SAS Institute Inc., Cary, NC 27513 USA               *;
+*                                                                            *;
+* Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);            *;
+* you may not use this file except in compliance with the License.           *;
+* You may obtain a copy of the License at                                    *;
+*                                                                            *;
+*   http://www.apache.org/licenses/LICENSE-2.0                               *;
+*                                                                            *;
+* Unless required by applicable law or agreed to in writing, software        *;
+* distributed under the License is distributed on an &quot;AS IS&quot; BASIS,          *;
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   *;
+* See the License for the specific language governing permissions and        *;
+* limitations under the License.                                             *;
+******************************************************************************;
+
+*** CALCULATE CCC ************************************************************;
+*** TO BE RUN IN EM SAS CODE NODE;
+
+%macro getCCC(maxK= 20);
+	%do i= 1 %to &amp;maxK;
+		proc fastclus
+			noprint
+			data= &amp;EM_IMPORT_DATA
+			maxclusters= &amp;i
+			outstat= o(where= (_TYPE_= 'CCC')
+				keep= _TYPE_ OVER_ALL);
+			var %EM_INTERVAL_INPUT;
+		run;
+		proc append base= CCCOut data= o; run;
+	%end;
+	proc print data= CCCOut; run;
+%mend; 
+%getCCC;
+]]>
+</Data>
+</USERTRAINCODE>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="EMOPEN" ID="EMOPEN" X="480" Y="642" DESCRIPTION="R Gap Statistic" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="UTIL" TOOLPREFIX="EMOPEN">
+<PROPERTIES Location="CATALOG" Catalog="SASHELP.EMUTIL.Em_open.SOURCE" TRAINMODE="SUPERVISED" LANGUAGE="R" R_OUTPUT="NONE" ForceRun="N" RunAction="Train" Component="EMOPEN" EDITOR="" TRANSFER="AUTO">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmVariableAttributes/>
+<EmFileProperties>
+<USERTRAINCODE Type="EXTERNAL" Extension="sas">
+<Data/>
+</USERTRAINCODE>
+<SUBMIT Type="EXTERNAL" Extension="txt">
+<Data><![CDATA[
+### CALCULATE GAP #############################################################
+### TO BE RUN IN EM OPEN SOURCE INTEGRATION NODE
+### INSTALL R CLUSTER PACKAGE IF NOT PREVIOUSLY INSTALLED
+### RUN IN NONE OUTPUT MODE
+
+library('cluster')
+set.seed(12345)
+gskmn &lt;- clusGap(&amp;EMR_IMPORT_DATA, FUN= kmeans, K.max= 20, B= 10)
+gskmn
+]]>
+</Data>
+</SUBMIT>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMSAMP.IDS.CLASS" COMPONENT="DataSource" ID="Ids" X="288" Y="132" DESCRIPTION="CLAIMS_TRAIN_SAMPLE" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="SAMPLE" TOOLPREFIX="Ids">
+<PROPERTIES DataSource="claimstrainsample" Scope="LOCAL" Role="RAW" Library="L" Table="CLAIMS_TRAIN_SAMPLE" NCols="35" NObs="5000" NBytes="984064" Segment="" DataSourceRole="RAW" OutputType="VIEW" ForceRun="Y" ComputeStatistics="N" DataSelection="DATASOURCE" NewTable="" MetaAdvisor="BASIC" ApplyIntervalLevelLowerLimit="Y" IntervalLowerLimit="20" ApplyMaxPercentMissing="Y" MaxPercentMissing="50" ApplyMaxClassLevels="Y" MaxClassLevels="20" IdentifyEmptyColumns="Y" VariableValidation="STRICT" NewVariableRole="REJECT" DropMapVariables="Y" DsId="claimstrainsample" DsSampleName="" DsSampleSizeType="" DsSampleSize="" DsCreatedBy="pathal" DsCreateDate="1733600671" DsModifiedBy="pathal" DsModifyDate="1733600671" DsScope="LOCAL" Sample="D" SampleSizeType="PERCENT" SampleSizePercent="20" SampleSizeObs="10000" DBPassThrough="Y" RunAction="Train" Component="DataSource" Description="">
+<VariableProperties/>
+<EmVariableAttributes>
+<DELTA Variable="Blind_Make" AttributeName="ROLE" AttributeValue="REJECTED"/>
+<DELTA Variable="Blind_Model" AttributeName="ROLE" AttributeValue="REJECTED"/>
+<DELTA Variable="Blind_Submodel" AttributeName="ROLE" AttributeValue="REJECTED"/>
+<DELTA Variable="Calendar_Year" AttributeName="LEVEL" AttributeValue="NOMINAL"/>
+<DELTA Variable="Cat9" AttributeName="LEVEL" AttributeValue="BINARY"/>
+<DELTA Variable="OrdCat" AttributeName="LEVEL" AttributeValue="ORDINAL"/>
+<DELTA Variable="Row_ID" AttributeName="LEVEL" AttributeValue="INTERVAL"/>
+<DELTA Variable="Vehicle" AttributeName="LEVEL" AttributeValue="NOMINAL"/>
+<DELTA Variable="_dataobs_" AttributeName="ROLE" AttributeValue="ID"/>
+</EmVariableAttributes>
+<EmTargetAttributes/>
+<EmFileProperties>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMMDFY.EMIMPUTE.CLASS" COMPONENT="Impute" ID="Impt" X="290" Y="270" DESCRIPTION="Impute Num and Class" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="MODIFY" TOOLPREFIX="Impt">
+<PROPERTIES MethodInterval="DISTRIBUTION" MethodClass="TREE" MethodTargetInterval="NONE" MethodTargetClass="NONE" ABWTuning="9" AHUBERTuning="1.5" AWAVETuning="6.2831853072" SpacingProportion="90" DefaultChar="" DefaultNum="." RandomSeed="12345" Normalize="Y" ImputeNoMissing="N" MaxPctMissing="50" ValidateTestMissing="N" DistributionMissing="N" LeafSize="5" Maxbranch="2" Maxdepth="6" MinCatSize="5" Nrules="5" Nsurrs="2" Splitsize="." Indicator="NONE" IndicatorRole="REJECTED" ReplaceVariable="N" HideVariable="Y" IndicatorSource="IMPUTED" ForceRun="N" RunAction="Train" Component="Impute" Train="Y" Score="Y" Report="Y">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmVariableAttributes/>
+<EmFileProperties>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMCORE.EXTENSION.CLASS" COMPONENT="Replace" ID="Repl" X="287" Y="337" DESCRIPTION="Replace Num Outliers" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="MODIFY" TOOLPREFIX="Repl">
+<PROPERTIES Location="CATALOG" Catalog="SASHELP.EMMDFY.REPLACE.SOURCE" HideVariable="N" UnknownLevel="NONE" ReplaceMethod="COMPUTED" CalcMethod="STDDEV" MADSCutoff="9.0" SpacingsCutoff="9.0" StddevCutoff="3.0" PercentsCutoff="0.5" CountReport="Y" ForceRun="N" RunAction="Train" Component="Replace" IntervalMethod="NONE" DataNeeded="Y">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmVariableAttributes/>
+<EmFileProperties>
+<USERTRAINCODE Type="EXTERNAL" Extension="sas">
+<Data/>
+</USERTRAINCODE>
+<NEWVALUES Type="DATA">
+<Data>
+<Obs NAME="Calendar_Year" LEVEL="_UNKNOWN_" TYPE="N" REPLACE_VALUE="_DEFAULT_"/>
+<Obs NAME="Cat1" LEVEL="_UNKNOWN_" TYPE="C" REPLACE_VALUE="_DEFAULT_"/>
+<Obs NAME="Cat10" LEVEL="_UNKNOWN_" TYPE="C" REPLACE_VALUE="_DEFAULT_"/>
+<Obs NAME="Cat11" LEVEL="_UNKNOWN_" TYPE="C" REPLACE_VALUE="_DEFAULT_"/>
+<Obs NAME="Cat2" LEVEL="_UNKNOWN_" TYPE="C" REPLACE_VALUE="_DEFAULT_"/>
+<Obs NAME="Cat3" LEVEL="_UNKNOWN_" TYPE="C" REPLACE_VALUE="_DEFAULT_"/>
+<Obs NAME="Cat4" LEVEL="_UNKNOWN_" TYPE="C" REPLACE_VALUE="_DEFAULT_"/>
+<Obs NAME="Cat5" LEVEL="_UNKNOWN_" TYPE="C" REPLACE_VALUE="_DEFAULT_"/>
+<Obs NAME="Cat6" LEVEL="_UNKNOWN_" TYPE="C" REPLACE_VALUE="_DEFAULT_"/>
+<Obs NAME="Cat7" LEVEL="_UNKNOWN_" TYPE="C" REPLACE_VALUE="_DEFAULT_"/>
+<Obs NAME="Cat8" LEVEL="_UNKNOWN_" TYPE="C" REPLACE_VALUE="_DEFAULT_"/>
+<Obs NAME="Cat9" LEVEL="_UNKNOWN_" TYPE="C" REPLACE_VALUE="_DEFAULT_"/>
+<Obs NAME="IMP_Cat12" LEVEL="_UNKNOWN_" TYPE="C" REPLACE_VALUE="_DEFAULT_"/>
+<Obs NAME="IMP_OrdCat" LEVEL="_UNKNOWN_" TYPE="N" REPLACE_VALUE="_DEFAULT_"/>
+<Obs NAME="NVCat" LEVEL="_UNKNOWN_" TYPE="C" REPLACE_VALUE="_DEFAULT_"/>
+<Obs NAME="Vehicle" LEVEL="_UNKNOWN_" TYPE="N" REPLACE_VALUE="_DEFAULT_"/>
+</Data>
+<Metadata>
+<Variable NAME="Name" LABEL="Variable" LENGTH="32" FORMAT="" TYPE="C"/>
+<Variable NAME="LEVEL" LABEL="Formatted Value" LENGTH="12" FORMAT="" TYPE="C"/>
+<Variable NAME="TYPE" LABEL="Type" LENGTH="1" FORMAT="" TYPE="C"/>
+<Variable NAME="REPLACE_VALUE" LABEL="Replacement Value" LENGTH="200" FORMAT="" TYPE="C"/>
+</Metadata>
+</NEWVALUES>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMMDFY.EMTRANS.CLASS" COMPONENT="Transform" ID="Trans" X="287" Y="557" DESCRIPTION="Standardize Interval" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="MODIFY" TOOLPREFIX="Trans">
+<PROPERTIES DefaultMethod="STANDARDIZE" DefaultTargetMethod="NONE" DefaultClassMethod="NONE" DefaultClassTargetMethod="NONE" Offset="1" MinOffset="Y" HideVariable="Y" RejectVariable="Y" GroupCutoff="0.1" GroupMissing="N" EmRandomSeed="12345" EmSampleSize="DEFAULT" EmSampleMethod="FIRSTN" MissingValue="USEINSEARCH" SummaryVariables="TRANSFORMED" SummaryStatistics="Y" UseMetaTransform="Y" MissingAsLevel="N" NumberofBins="VARIABLES" MaxOptimalBins="4" ForceRun="N" RunAction="Train" Component="Transform" Train="Y" Score="Y" Report="Y">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmVariableAttributes/>
+<EmFileProperties>
+<INTERACTION Type="DATA">
+<Data/>
+<Metadata/>
+</INTERACTION>
+<FORMULA Type="DATA">
+<Data/>
+<Metadata/>
+</FORMULA>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMMDFY.EMTRANS.CLASS" COMPONENT="Transform" ID="Trans2" X="286" Y="413" DESCRIPTION="Bin Class Outliers" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="MODIFY" TOOLPREFIX="Trans">
+<PROPERTIES DefaultMethod="NONE" DefaultTargetMethod="NONE" DefaultClassMethod="GROUP" DefaultClassTargetMethod="NONE" Offset="1" MinOffset="Y" HideVariable="Y" RejectVariable="Y" GroupCutoff="0.1" GroupMissing="N" EmRandomSeed="12345" EmSampleSize="DEFAULT" EmSampleMethod="RANDOM" MissingValue="USEINSEARCH" SummaryVariables="TRANSFORMED" SummaryStatistics="Y" UseMetaTransform="Y" MissingAsLevel="N" NumberofBins="VARIABLES" MaxOptimalBins="4" ForceRun="N" RunAction="Train" Component="Transform" Train="Y" Score="Y" Report="Y">
+<VariableProperties/>
+<EmTargetAttributes/>
+<EmVariableAttributes/>
+<EmFileProperties>
+<INTERACTION Type="DATA">
+<Data/>
+<Metadata/>
+</INTERACTION>
+<FORMULA Type="DATA">
+<Data/>
+<Metadata/>
+</FORMULA>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+<NODE CLASS="SASHELP.EMEXPL.VARSELECTION.CLASS" COMPONENT="VariableSelection" ID="Varsel" X="289" Y="200" DESCRIPTION="Variable Selection" DIAGRAMID="_ROOT_" PARENTID="" TOOLTYPE="EXPLORE" TOOLPREFIX="Varsel">
+<PROPERTIES TargetModel="DEFAULT" HideRejectedVars="Y" MaxMissingPercent="20" MaxLevel="50" RejectUnusedInputVars="Y" ByPassVars="NONE" ByPassVarsRole="INPUT" HideUnusedInputVars="Y" UseAov16="N" UseInteractions="N" UseGroups="Y" MinR2="0.005" StopR2="0.0005" MaxRows="3000" Passes="6" ChiSquare="3.84" Bins="50" SASSPDS="Y" PrintOption="DEFAULT" ForceRun="N" RunAction="Train" Component="VariableSelection" VarselLabel="VARSELLABEL" Train="Y" Score="Y" Report="Y" RoleUnusedVars="DEFAULT">
+<VariableProperties/>
+<ManualSelectionVariables/>
+<NameMappings/>
+<EmTargetAttributes/>
+<EmVariableAttributes/>
+<EmFileProperties>
+<EMNOTES Type="EXTERNAL" Extension="txt">
+<Data/>
+</EMNOTES>
+</EmFileProperties>
+</PROPERTIES>
+</NODE>
+</NODES>
+<CONNECTIONS>
+<CONNECTION FROM="Impt" TO="Repl"/>
+<CONNECTION FROM="Repl" TO="Trans2"/>
+<CONNECTION FROM="Trans2" TO="EMCODE"/>
+<CONNECTION FROM="EMCODE" TO="Trans"/>
+<CONNECTION FROM="Trans" TO="EMCODE2"/>
+<CONNECTION FROM="Varsel" TO="Impt"/>
+<CONNECTION FROM="EMOPEN" TO="CNTRL"/>
+<CONNECTION FROM="EMCODE4" TO="CNTRL"/>
+<CONNECTION FROM="EMCODE3" TO="CNTRL"/>
+<CONNECTION FROM="Drop" TO="EMCODE4"/>
+<CONNECTION FROM="EMCODE2" TO="Drop"/>
+<CONNECTION FROM="Drop" TO="EMOPEN"/>
+<CONNECTION FROM="Drop" TO="EMCODE3"/>
+<CONNECTION FROM="Ids" TO="Varsel"/>
+</CONNECTIONS>
+<NOTES>
+<DATA><![CDATA[
+
+
+
+]]>
+</DATA>
+</NOTES>
+</Workspace>
+</_ROOT_>
