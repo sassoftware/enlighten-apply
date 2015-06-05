@@ -66,19 +66,19 @@ emc_israel_data_science_challenge.sas
 to a directory referred to as {WORK_DIR}.
 
 2.) Unzip example data file (data.zip) so that the following files are
-extracted to {WORK_DIR}\data
-
-emc_train_data.csv
-emc_train_labels.csv
+extracted to {WORK_DIR}\data. 
 
 3.) Open the emc_israel_data_science_challenge.sas file in a standard
 DMS SAS Session.
 
 4.) Set the git_repo_data_dir macro variable to the (unzipped!) data
-subdirectory of the repository i.e., {WORK_DIR}\data
+subdirectory of the repository i.e., {WORK_DIR}\data.
 
-5.) Submit the entire file or in parts if interested in walking through
-the steps
+5.) Set the cpu_count macro variable to an integer less than or equal to the
+number of physical CPU cores on your system.
+
+6.) Submit the entire file or in parts if interested in walking through
+the steps.
 
 
 ===============
@@ -126,9 +126,9 @@ to the bottom of the file.
 to a directory referred to as {WORK_DIR}.
 
 3.) Unzip example data file (data.zip) so that the following files are
-extracted to {WORK_DIR}\data
+extracted to {WORK_DIR}\data.
 
-4.) Create a new project in SAS Enterprise Miner
+4.) Create a new project in SAS Enterprise Miner.
 
 5.) In top-left pane, right-click on "Diagrams" folder and select
 "Import Diagram from XML...". In the Open window, browse to {WORK_DIR} and
@@ -231,7 +231,7 @@ _dataobs_       ID             Interval
 the newly created data source with same name on to the diagram and connect
 it to the second node (Variable Selection) in the flow.
 
-7.) Run the flow
+7.) Run the flow.
 
 NOTE: The SAS program file claim_prediction_challenge.sas and the model
 package file claim_prediction_challenge.spk are provided for for
@@ -253,10 +253,10 @@ extracted to {WORK_DIR}\data
 3.) Open the digit_recognizer.sas file in a standard DMS SAS Session.
 
 4.) Set the git_repo_data_dir macro variable to the (unzipped!) data
-subdirectory of the repository i.e., {WORK_DIR}\data
+subdirectory of the repository i.e., {WORK_DIR}\data.
 
 5.) Set the cpu_count macro variable to an integer less than or equal to the
 number of physical CPU cores on your system.
 
 6.) Submit the entire file or in parts if interested in walking through
-the steps
+the steps.

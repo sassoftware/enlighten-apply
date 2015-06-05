@@ -27,6 +27,9 @@
 %let git_repo_data_dir= ;
 x "cd &git_repo_data_dir";
 
+*** SET CPU COUNT;
+%let cpu_count= ;
+
 *** IMPORT TRAINING DATA TO CREATE COO FORMAT SAS DATA SET *******************;
 *** FILL IN PATH;
 %let train_file= 'emc_train_data.csv'; /* CSR FILE */
@@ -248,7 +251,7 @@ proc hpforest
 	target target / level= nominal;
 	id target hkey;
 	ods output FitStatistics= fitstats(rename= (Ntrees= Trees));
-	performance nthreads= ;					/* FILL IN CORE INFO */
+	performance nthreads= &cpu_count.;					/* FILL IN CORE INFO */
 	score out= emcIsrael&ncols.Pred;
 *	performance commit= 10000 nodes=  host= "" install= "";	/* FILL IN GRID INFO */
 run;
