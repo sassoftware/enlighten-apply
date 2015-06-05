@@ -153,42 +153,79 @@ IMPORTANT: Make sure the table metadata matches as below. If not, make
 necessary changes.
 
 Name            Role           Level
+
 ========        ========       ========
+
 Blind_Make      Rejected       Nominal
+
 Blind_Model     Rejected       Nominal
+
 Blind_Submodel  Rejected       Nominal
+
 Calendar_Year   Input          Nominal
+
 Cat1            Input          Nominal
+
 Cat10           Input          Nominal
+
 Cat11           Input          Nominal
+
 Cat12           Input          Nominal
+
 Cat2            Input          Nominal
+
 Cat3            Input          Nominal
+
 Cat4            Input          Nominal
+
 Cat5            Input          Nominal
+
 Cat6            Input          Nominal
+
 Cat7            Input          Nominal
+
 Cat8            Input          Nominal
+
 Cat9            Input          Binary
+
 Household_ID    ID             Nominal
+
 Model_Year      Input          Interval
+
 NVCat           Input          Nominal
+
 NVVar1          Input          Interval
+
 NVVar2          Input          Interval
+
 NVVar3          Input          Interval
+
 NVVar4          Input          Interval
+
 OrdCat          Input          Ordinal
+
 Row_ID          ID             Interval
+
 Var1            Input          Interval
+
 Var2            Input          Interval
+
 Var3            Input          Interval
+
 Var4            Input          Interval
+
 Var5            Input          Interval
+
 Var6            Input          Interval
+
 Var7            Input          Interval
+
 Var8            Input          Interval
+
 Vehicle         Input          Nominal
+
 _dataobs_       ID             Interval
+
 
 6d.) Delete existing CLAIMS_TRAIN_SAMPLE node in the flow and drag-drop
 the newly created data source with same name on to the diagram and connect
