@@ -234,7 +234,7 @@ it to the second node (Variable Selection) in the flow.
 7.) Run the flow.
 
 NOTE: The SAS program file claim_prediction_challenge.sas and the model
-package file claim_prediction_challenge.spk are provided for for
+package file claim_prediction_challenge.spk are provided for
 redunancy.
 
 
