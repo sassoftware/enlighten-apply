@@ -375,7 +375,7 @@ run;
 	/* the defined macro will simply resolve to the values of the key variable */
 
 	filename lstmacro catalog 'work.emutil.macro.source';
-    data _null_;
+	data _null_;
 		length _line $80;
 		retain _line;
 		set &metadata end=eof;
