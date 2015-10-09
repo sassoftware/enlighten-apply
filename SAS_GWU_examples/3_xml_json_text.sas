@@ -27,15 +27,16 @@
 
 *** XML **********************************************************************;
 
-* one way to process semi-structured XML data using sas;
+* one way to process semi-structured XML data using SAS;
 * is the SAS XML libname;
+* PROC GROOVY provides another method to ingest JSON using SAS;
 
 * define a library reference to the example.xml file;
 * then you can treat it like a SAS data set;
 libname x xml92 "&git_repo_dir";
 
 * read data into SAS work;
-* usually a good idea;
+* create scratch set;
 data scratch;
 	set x.example;
 run;
@@ -44,29 +45,34 @@ run;
 * fix variable1 to have 2 decimal points;
 * fix variable2 to be a numeric variable;
 * converting a character variable to a numeric variable (and vise versa);
-* is common data cleaning operation in SAS;
+* is a common data cleaning operation in SAS;
 * formatted variables are also common in SAS;
-* create scratch set;
+* recreate scratch set;
 data scratch;
 
 	/* rename variable2 before it is read */
 	/* use length statement before set statement */
 	/* to enforce order of variables in the new set */
-	/* define new variable2 as numeric explicitly */
+	/* and to define new variable2 as numeric explicitly */
+	
 	/* input() function converts a character value into a numeric value */
 	/* ?? prevents an error when an invalid value is encountered */
 	/* best. is a SAS informat */
 	/* it determines the best format for reading variable2c */
+	
 	/* compress() removes white space from characters */
+	
 	/* account for invalid data */
+	/* convert numeric missing to code: 99 */
+	
 	/* 10.2 format limits variable1 to 10 digits with 2 decimal points */
-	/* 2. format limits variable 2 to 2 digits */
+	/* 2. format limits variable2 to 2 digits */
+	
 	/* drop variable2c in data step */
 
 	length variable1 variable2 8 variable3 $6;
 	set scratch (rename=(variable2=variable2c));
 	variable2 = input(compress(variable2c), ?? best.);
-	/* convert numeric missing to code: 99 */
 	if variable2 = . then variable2 = 99;
 	format variable1 10.2;
 	format variable2 2.;
@@ -78,22 +84,25 @@ data x.clean_example;
 	set scratch;
 run;
 
-* design libref x;
+* deassign libref x;
 libname x;
 
 *** JSON *********************************************************************;
 
+* one way to process semi-structured JSON data using SAS;
+* is the data step with the truncover and scanover options;
+
 * create a file reference to the example.json file;
 filename json "&git_repo_dir.&dsep.example.json";
 
-* use a data step strategy to ingest the JSON file;
+* use a data step to ingest the JSON file;
 * read desired JSON elements as character strings;
 * create scratch2 set;
 data scratch2;
 
 	/* infile statement reads from an external file */
 	/* infile and data step provide A LOT of flexibility */
-	/* lrecl is how long a single record in the external file can be */
+	/* lrecl defines the maximum length of a single record in an external file */
 	/* truncover allows records to be shorter than expected */
 	/* scanover scans for the @'character-string' expression */
 	/* input statement creates new SAS variables */
@@ -120,59 +129,74 @@ data scratch2;
 	variable3 = strip(substr(c_variable3, 1, indexc(c_variable3, ',"')-1));
 	format variable1 10.2;
 	format variable2 2.;
+	/* drop original variable read from JSON */
 	drop c_:;
 run;
 
-* PROC GROOVY provides another method to ingest JSON using SAS;
+* deassign fileref json;
+filename json; 
 
 *** text *********************************************************************;
 
 * create a file reference to the example.txt file;
+* each line contains a tweet; 
 filename txt "&git_repo_dir.&dsep.example.txt";
 
+
+* each line will be one line of the data set;
 * create scratch3 set;
-* each tweet will be one line of the data set;
 data scratch3;
-	length line $140.;		/* tweets are 140 characters */
-	infile txt dlm='0a'x;	/* hex character for line return */
+	length line $140.;          /* tweets are 140 characters */
+	infile txt delimiter='0a'x;	/* hex character for line return */
 	informat line $140.;
 	input line $;
 run;
 
 * basic text normalization;
-* use SAS PRX functions;
+* use SAS prx functions;
+* regular expressions are a flexible tool for manipulating text;
+* SAS surfaces regular expressions through the prx functions;
+* recreate scratch3 set; 
 data scratch3;
 
-	/* regular expression our a flexible tool for manipulating test */
-	/* SAS surfaces them through the prx functions */
-
 	/* compile regular expression */
+	/* find http* and replace with one blank space */
+	/* all text to lower case */
+	/* use regular expression to remove urls */
+	/* remove non-alphabetical characters */
+		
 	regex = prxparse('s/http.*( |)/ /');
 	length line $140.;
 	infile txt dlm='0a'x;
 	informat line $140.;
 	input line $;
-	/* all text to lower case */
 	line = lowcase(line);
-	/* use perl regular expression to remove urls */
 	call prxchange(regex, -1, line);
-	/* remove non-alphabetical characters */
 	line = compress(line, '?@#:&!".');
 	drop regex;
 run;
 
-*** create a term by document matrix *****************************************;
+*** create a term by document (tbd) matrix ***********************************;
 
-* tranpose wide data into long data;
+* term by document matrix is often represented by rows of 3-tuples;
+* (document ID, term ID, term count);
+* a term by document matrix in this format is suitable for text mining;
+
+* first step toward creating a tbd matrix; 
+* transpose wide data into long data;
+* create scratch4 set;
 data scratch4;
-	set scratch3;
-	/* give each tweet a numeric ID */
-	retain tweet_id 1;
+
+	/* give each tweet a numeric ID using a retained variable*/
 	/* use a do loop to put each term into its own row */
+	/* scan() function returns the ith element of a delimited list */
+	/* remove short terms that are usually not informative */
+	
+	set scratch3;
+	retain tweet_id 1;
 	n_terms = countw(line);
 	do i=1 to n_terms;
 		term = scan(line, i);
-		/* short terms usually not informative */
 		if length(term) > 2 then output;
 	end;
 	tweet + 1;
@@ -180,26 +204,20 @@ data scratch4;
 run;
 
 * create a dictionary of unique terms;
-proc sort
-	data=scratch4(keep=term)
-	out=dictionary;
-	by term;
-run;
-* which terms appear frequently?;
+* add term ID number to dictionary;
 proc sort
 	data=scratch4(keep=term)
 	out=dictionary
-	/* remove duplicate terms this time */
+	/* remove duplicate terms */
 	nodupkey;
 	by term;
 run;
-* add term ID number to dictionary;
 data dictionary;
 	set dictionary;
 	term_id = _n_;
 run;
 
-* sort transposed set by term to join term IDs;
+* sort scratch4 set by term and join to term IDs;
 proc sort
 	data=scratch4;
 	by term;
@@ -210,8 +228,8 @@ data scratch4;
 run;
 
 * create term by document matrix;
-* term by document matrix is often represented by rows of 3-tuples;
-* (document ID, term ID, term count);
+* use by variables and a retained variable;
+* to count terms in each tweet;  
 proc sort
 	data=scratch4;
 	by tweet_id term_id;
@@ -224,7 +242,7 @@ data tbd;
 	count + 1;
 	keep tweet_id term_id count;
 run;
-* a term by document matrix in this format is suitable for text mining;
+
 
 
 

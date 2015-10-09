@@ -323,7 +323,7 @@ run;
 * hash join should match earlier join results;
 proc compare base=scratch6 compare=scratch9; run;
 
-*** lists in sas *************************************************************;
+*** delimited lists in sas ***************************************************;
 
 * PROC SQL is probably the easiest way to create a list;
 * but the list is limited to the maximum length of a macro variable;
