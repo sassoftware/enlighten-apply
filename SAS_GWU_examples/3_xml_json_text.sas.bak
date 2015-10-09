@@ -210,7 +210,7 @@ data scratch4;
 run;
 
 * create term by document matrix;
-* term by document matrix is often represented by rows of 3-tuples;
+* term by document matrix is often represent by rows of 3-tuples;
 * (document ID, term ID, term count);
 proc sort
 	data=scratch4;
