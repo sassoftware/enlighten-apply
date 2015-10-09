@@ -1,0 +1,6 @@
+.@jehanramez also check out a new addition: https://github.com/sassoftware/dm-flow …
+Good input @Petzoldt! CV is now in @SASSoftware PROC GLMSELECT & EM decision tree and least angle regression nodes. U want more?
+More @SASsoftware #machinelearning resources on @Github http://ow.ly/Tb3cx #datascience #SASUsers
+"Project Freedom" by @SebastianThrun on @LinkedIn https://www.linkedin.com/pulse/project-freedom-liberate-your-low-performers-sebastian-thrun …
+Intuitive explanations for advanced #machinelearning and #deeplearning concepts: http://colah.github.io/  - Thanks @ch402!
+

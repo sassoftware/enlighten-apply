@@ -18,6 +18,13 @@
 * SECTION 2 - SAS data sets and other data structures                        *;
 ******************************************************************************;
 
+* define git_repo_dir macro variable; 
+%let git_repo_dir = /folders/myshortcuts/SAS_GWU_examples; 
+
+* set directory separator; 
+%let dsep = /; /* comment line for windows (but not for unversity edition) */
+* %let dsep = \; /* uncomment line for windows */
+
 *** sas data sets ************************************************************;
 
 * the sas data set is the primary data structure in the SAS language;
@@ -42,6 +49,7 @@ data scratch;
 	/* horizontally across a data set */
 	/* $ denotes a character array */
 	/* do loops are often used in conjuction with arrays */
+	/* SAS arrays are indexed from 1 */
 
 	/* a key is a variable with a unique value for each row */
 
@@ -213,7 +221,8 @@ run;
 proc export
 	data=scratch7
 	/* create scratch7.csv in working directory */
-	outfile="%sysfunc(pathname(WORK))/scratch7.csv"
+	/* . ends a macro variable name */
+	outfile="&git_repo_dir.&dsep.scratch7.csv"
 	/* create a csv */
 	dbms=csv
 	/* replace an existing file with that name */
@@ -225,7 +234,7 @@ run;
 * to overwrite scratch7 set;
 proc import
 	/* import from scratch7.csv */
-	datafile="%sysfunc(pathname(WORK))/scratch7.csv"
+	datafile="&git_repo_dir.&dsep.scratch7.csv"
 	/* create a sas table in the work library */
 	out=scratch7
 	/* from a csv file */
@@ -338,6 +347,7 @@ data _null_;
 	/* the line directly below creates a macro variable */
 	/* with the name list_element<_n_> */
 	/* and with the value of the variable name in the current row */
+	/* strip() removes whitespace */
 	call symput('list_element'||strip(put(_n_, best.)), name);
 	/* it is also convenient to know the number of elements in the list */
 	/* the variable eof will be true when the end of the data set is reached */

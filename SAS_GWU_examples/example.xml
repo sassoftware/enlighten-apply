@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<table>
+	<example>
+		<variable1>1.0</variable1>
+		<variable2>45</variable2>
+		<variable3>hello</variable3>
+	</example>
+	<example>
+		<variable1>854.34</variable1>
+		<variable2>0x08</variable2>
+		<variable3>qwerty</variable3>
+	</example>
+	<example>
+		<variable1>0.006</variable1>
+		<variable2>2 5</variable2>
+		<variable3>xoxo</variable3>
+	</example>
+</table>

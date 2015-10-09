@@ -1,0 +1,17 @@
+{
+	"row": {
+		"variable1": 1,
+		"variable2": 45,
+		"variable3": "hello"
+	},
+	"row": {
+	"variable1": 854.34,
+	"variable2": 99,
+	"variable3": "qwerty"
+	},
+	"row": {
+	"variable1": 0.006,
+	"variable2": 25,
+	"variable3": "xoxo"
+	}
+}
