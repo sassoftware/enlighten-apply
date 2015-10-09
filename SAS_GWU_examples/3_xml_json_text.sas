@@ -115,6 +115,7 @@ run;
 
 * use data step functions and SAS formats;
 * to tidy up JSON input;
+* recreate scratch2 set;
 data scratch2;
 	length variable1 variable2 8 variable3 $6;
 	infile json lrecl=32767 truncover scanover;
@@ -142,21 +143,20 @@ filename json;
 * each line contains a tweet; 
 filename txt "&git_repo_dir.&dsep.example.txt";
 
-
 * each line will be one line of the data set;
 * create scratch3 set;
 data scratch3;
 	length line $140.;          /* tweets are 140 characters */
-	infile txt delimiter='0a'x;	/* hex character for line return */
+	infile txt delimiter='0a'x; /* hex character for line return */
 	informat line $140.;
 	input line $;
 run;
 
 * basic text normalization;
-* use SAS prx functions;
+* use data step functions including prx functions;
 * regular expressions are a flexible tool for manipulating text;
 * SAS surfaces regular expressions through the prx functions;
-* recreate scratch3 set; 
+* recreate scratch3 set;
 data scratch3;
 
 	/* compile regular expression */
@@ -164,7 +164,7 @@ data scratch3;
 	/* all text to lower case */
 	/* use regular expression to remove urls */
 	/* remove non-alphabetical characters */
-		
+
 	regex = prxparse('s/http.*( |)/ /');
 	length line $140.;
 	infile txt dlm='0a'x;
@@ -199,7 +199,7 @@ data scratch4;
 		term = scan(line, i);
 		if length(term) > 2 then output;
 	end;
-	tweet + 1;
+	tweet_id + 1;
 	drop line n_terms i;
 run;
 
@@ -229,14 +229,14 @@ run;
 
 * create term by document matrix;
 * use by variables and a retained variable;
-* to count terms in each tweet;  
+* to count terms in each tweet;
 proc sort
 	data=scratch4;
 	by tweet_id term_id;
 run;
 data tbd;
 	set scratch4;
-	by tweet term_id;
+	by tweet_id term_id;
 	retain count 0;
 	if first.term_id then count = 0;
 	count + 1;
