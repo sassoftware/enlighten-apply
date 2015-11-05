@@ -82,8 +82,8 @@ libname l "&git_repo_dir";
 %mend;
 %create_random_vectors(l.original_features, &n_features);
 
-* project data onto random features with PROC SCORE;
-* executes original_features*transpose(random_vectors) dot product;
+* project data onto generated random vectors with PROC SCORE;
+* executes original_features*transpose(generated_random_vectors) dot product;
 proc score
 	data=l.original_features
 	type='SCORE' /* requests dot product multiplication */
