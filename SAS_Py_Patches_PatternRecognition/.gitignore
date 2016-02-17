@@ -1,0 +1,7 @@
+*.pyc
+*.log
+*.htm*
+*.png
+*.bak
+zct_debug
+
