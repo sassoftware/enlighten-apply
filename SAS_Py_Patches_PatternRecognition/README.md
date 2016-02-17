@@ -46,12 +46,11 @@ For *unsupervised* learning ...
     of the features extracted by the stacked autoencoder in 
     make_dictionary.sas. If the SAS data set hidden_output.sas7bdat exists in
     the OUT_DIR specified in make_clusters.sas, then clusters will
-    automatically be made in the extracted feature space.
-
-    The graphical output of make_clusters.sas may require very large amounts of
-    JVM heapspace to be allocated, > 20 GB in some test cases. This can be 
-    achieved by editing the -Xms and -Xmx JRE options in sasv9.cfg to allow
-    for larger amounts of memory to be allocated.
+    automatically be made in the extracted feature space. The graphical output
+    of make_clusters.sas may require very large amounts of JVM heapspace to be
+    allocated, > 20 GB in some test cases. This can be achieved by editing the
+    -Xms and -Xmx JRE options in sasv9.cfg to allow for larger amounts of
+    memory to be allocated.
 
 OR for *supervised* learning ...
 
