@@ -185,7 +185,7 @@ proc neural
   thaw h2->h3;
   thaw h3->h4;
   train
-  tech=congra
+    tech=congra
     maxtime=10000
     maxiter=5000
     outest=weights_all
