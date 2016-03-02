@@ -26,3 +26,11 @@ and data mining tasks.
 Should be printable on 8.5 x 14 in. legal paper.
 
 Contributors include Funda Gunes, Patrick Hall, Jorge Silva, and Brett Wujek
+
+===============
+
+![Alt text](PNG/MLQuickRefBestPractices.png?raw=true "General Best Practices Table")
+
+![Alt text](PNG/MLQuickRefAlgos1.PNG?raw=true "Mostly Supervised Algo Table")
+
+![Alt text](PNG/MLQuickRefAlgos2.PNG?raw=true "Mostly Unupervised Algo Table")
