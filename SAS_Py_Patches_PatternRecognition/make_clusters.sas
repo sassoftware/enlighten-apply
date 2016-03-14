@@ -60,10 +60,11 @@ options mprint;
 * conditionally defines a graph template for each image;
 * aligns patches in each cluster with the original image;
 * plots results;
-%macro plot_clusters;
+* label_var - name of variable containing cluster label;
+%macro plot_clusters(label_var=_CLUSTER_ID_);
 
   * define a list of SAS/GRAPH colors;
-  %let color_list = blue cream cyan gold green lilac lime magenta maroon
+  %let color_list = cream blue cyan gold green lilac lime magenta maroon
                     olive orange pink purple red rose salmon violet white
                     yellow;
 
@@ -95,7 +96,7 @@ options mprint;
       where orig_name = "&&image&j";
 
       * determine number of clusters in image;
-      select max(_CLUSTER_ID_) into: n_clus
+      select max(&label_var.) into: n_clus
       from l.cluster_labels
       where orig_name = "&&image&j";
 
@@ -117,7 +118,7 @@ options mprint;
               value "&i" / markerattrs=(color=&_color symbol=circlefilled);
             %end;
           enddiscreteattrmap;
-          discreteattrvar attrvar=groupmarkers var=_cluster_id_
+          discreteattrvar attrvar=groupmarkers var=&label_var.
             attrmap="cluster_colors";
           * layout boundaries and axis attributes;
           layout overlay / aspectratio=1
@@ -136,7 +137,7 @@ options mprint;
             scatterplot x=scatter_x y=scatter_y /
               group=groupmarkers name="clus"
               /* transparency needs to be adjusted for different image sizes */
-              markerattrs=(symbol=CircleFilled size=1px transparency=0.95);
+              markerattrs=(symbol=CircleFilled size=1px transparency=0.5);
           endlayout;
         endgraph;
       end;
@@ -149,8 +150,8 @@ options mprint;
       * accounting for size and rotation;
       * sort into correct order to align with original image;
       data tiles_clus_expanded;
-        set l.cluster_labels (where=(_CLUSTER_ID_=&k. and orig_name="&&image&j"));
-        retain _CLUSTER_ID_;
+        set l.cluster_labels (where=(&label_var.=&k. and orig_name="&&image&j"));
+        retain &label_var.;
         _x = x;
         _y = %eval(&max_y.-1) - y;
         do i=0 to size-1;
@@ -166,7 +167,7 @@ options mprint;
           output;
         end;
       end;
-      keep x y orig_name _CLUSTER_ID_;
+      keep x y orig_name &label_var.;
     run;
     proc sort nodupkey; by orig_name x y; run;
 
@@ -182,7 +183,7 @@ options mprint;
             tiles_clus_expanded;
       by orig_name x y;
       * gtl requires a different name for different layout layer attributes;
-      if _CLUSTER_ID_ ne . then do;
+      if &label_var. ne . then do;
         scatter_x = x;
         scatter_y = y;
       end;
@@ -304,7 +305,7 @@ options mprint;
   proc hpclus
     data=&ds
     maxclusters=&MAX_CLUSTERS
-    noc=abc(b=3 minclusters=2 align=PCA criterion=firstpeak)
+    noc=abc(b=10 minclusters=2 align=PCA criterion=all)
     maxiter=1000
     seed=44444;
     %if "&ds" = "l.patches" %then %do;

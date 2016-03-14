@@ -24,6 +24,7 @@
 * input patches are scored with predicted values or labels                   *;
 *   and saved to OUT_DIR                                                     *;
 * score code with network weights is saved to OUT_DIR                        *;
+* conditionally plots classified patches over original images                *;
 *                                                                            *;
 * CORE_COUNT - number of physical cores to use, int                          *;
 * OUT_DIR - out (-o) directory created by Python script as unquoted string,  *;
@@ -44,11 +45,11 @@
 ******************************************************************************;
 
 * TODO: user sets constants;
-%let CORE_COUNT = 12;
+%let CORE_COUNT = 2;
 %let OUT_DIR = ;
 %let LABEL_FILE = ;
 %let DIM = 25;
-%let HIDDEN_UNIT_LIST = 50 25 10;
+%let HIDDEN_UNIT_LIST = 100 50 10;
 %let VALID_PROPORTION = 0.3;
 %let STAT = MISC;
 
@@ -181,7 +182,7 @@ proc neural
 
   /* initialize network */
   /* infan reduces chances of neurons being saturated by random init */
-  initial infan=0.25;
+  initial infan=0.1;
 
   /* pretrain layers seperately */
 
@@ -260,10 +261,185 @@ proc neural
   * score l.patches;
   score
     data=l.patches
-    out=l.DNN_labels (keep=P_: orig_name x y)
+    out=l.DNN_labels (keep=I_label orig_name x y size angle)
     role=test;
 
   * save score code;
   code file="&OUT_DIR/DNN_score.sas";
 
 quit;
+
+*** conditionally plot classification results ********************************;
+
+*** plot_labels ************************************************************;
+* conditionally defines a graph template for each image;
+* aligns patches in each class with the original image;
+* plots results;
+* label_var - name of variable containing class label;
+%macro plot_labels(label_var=I_label);
+
+  * define a list of SAS/GRAPH colors;
+  %let color_list = red blue cream cyan gold green lilac lime magenta maroon
+                    olive orange pink purple red rose salmon violet white
+                    yellow;
+
+  * place original image names into macro variable array;
+  proc sql noprint;
+    create table image_names as
+    select distinct orig_name
+    from l.originals;
+  quit;
+  data _null_;
+    set image_names end=eof;
+    call symput('image'||strip(put(_n_, best.)), strip(orig_name));
+    if eof then call symput('n_images', strip(put(_n_, best.)));
+  run;
+
+  * loop for each original image;
+  %do j=1 %to &n_images;
+
+    proc sql;
+
+      * determine max x value of image;
+      select max(x) into: max_x
+      from l.originals
+      where orig_name = "&&image&j";
+
+      * determine max y value of image;
+      select max(y) into: max_y
+      from l.originals
+      where orig_name = "&&image&j";
+
+      * determine number of classes in image;
+      select max(&label_var.) into: n_label
+      from l.dnn_labels
+      where orig_name = "&&image&j";
+
+    quit;
+
+    * conditionally define gtl template based on image attributes;
+    ods path show;
+    ods path(prepend) work.templat(update);
+    proc template;
+      define statgraph contour;
+        dynamic _title;
+        begingraph;
+          entrytitle _title;
+          * assign consistent color to class labels across all images;
+          discreteattrmap name="class_colors";
+            %do i=1 %to &n_label;
+              %let color_index = %eval(%sysfunc(mod(%eval(&i-1), &n_label))+1);
+              %let _color = %scan(&color_list, &color_index, ' ');
+              value "&i" / markerattrs=(color=&_color symbol=circlefilled);
+            %end;
+          enddiscreteattrmap;
+          discreteattrvar attrvar=groupmarkers var=&label_var.
+            attrmap="class_colors";
+          * layout boundaries and axis attributes;
+          layout overlay / aspectratio=1
+            xaxisopts=(offsetmin=0 offsetmax=0 linearopts=(viewmin=0
+              viewmax=%eval(&max_x.-1) tickvaluelist=(0 %eval(&max_x./2)
+              %eval(&max_x.-1))))
+            yaxisopts=(offsetmin=0 offsetmax=0 linearopts=(viewmin=0
+              viewmax=%eval(&max_y.-1) tickvaluelist=(0 %eval(&max_y./2)
+              %eval(&max_y.-1))));
+            * contour plot of original image is bottom layer of layout;
+            contourplotparm x=x y=y z=z /
+              contourtype=gradient nlevels=255
+              colormodel=twocolorramp;
+            * a dense scatter plot of class patches is overlayed;
+            * onto contour plot of original image;
+            scatterplot x=scatter_x y=scatter_y /
+              group=groupmarkers name="class"
+              /* transparency needs to be adjusted for different image sizes */
+              markerattrs=(symbol=CircleFilled size=1px transparency=0.35);
+          endlayout;
+        endgraph;
+      end;
+    run;
+
+    * loop for each class;
+    %do k=1 %to &n_label;
+
+      * create x,y coordinates of class;
+      * accounting for size and rotation;
+      * sort into correct order to align with original image;
+      data tiles_label_expanded;
+        set l.dnn_labels (where=(&label_var.="&k." and orig_name="&&image&j"));
+        retain &label_var.;
+        _x = x;
+        _y = %eval(&max_y.-1) - y;
+        do i=0 to size-1;
+          do j=0 to size-1;
+            y = _y - i;
+            x = _x + j;
+            if angle ne 0 then do;
+              pi = constant("pi");
+              _angle = (angle/180)*pi;
+              x = floor(x*cos(_angle) - y*sin(_angle));
+              y = floor(x*sin(_angle) + y*cos(_angle));
+            end;
+          output;
+        end;
+      end;
+      keep x y orig_name &label_var.;
+    run;
+    proc sort nodupkey; by orig_name x y; run;
+
+    * if no class for this label, continue;
+    %let _rc = %sysfunc(open(tiles_label_expanded));
+    %let _nlobs = %sysfunc(attrn(&_rc, NLOBS));
+    %let _rc = %sysfunc(close(&_rc));
+    %if ^&_nlobs %then %goto continue;
+
+    * align labeled patches with original image;
+    data label_merge;
+      merge l.originals (where=(orig_name="&&image&j"))
+            tiles_label_expanded;
+      by orig_name x y;
+      * gtl requires a different name for different layout layer attributes;
+      if &label_var. ne . then do;
+        scatter_x = x;
+        scatter_y = y;
+      end;
+    run;
+
+    * render image;
+    proc sgrender data=label_merge template=contour;
+      dynamic _title="&&image&j label &k";
+    run;
+
+    %continue:
+
+    %end; /* end class loop */
+
+  %end; /* end image loop */
+
+%mend;
+
+*** plot *********************************************************************;
+* simple utility macro to load originals.csv and conditionally execute; 
+* ploting if a classification task was performed;
+%macro plot(_stat=&STAT);
+
+  %if "&_stat" = "MISC" %then %do;
+
+    * import original images;
+    proc import
+      datafile="&OUT_DIR.\originals.csv"
+      out=l.originals
+      dbms=csv
+      replace;
+    run;
+    proc sort
+      data=l.originals
+      sortsize=MAX;
+      by orig_name x y;
+    run;
+
+	%plot_labels;
+
+  %end;
+
+%mend; 
+%plot;

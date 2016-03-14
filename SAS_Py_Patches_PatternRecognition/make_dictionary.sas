@@ -134,7 +134,7 @@ proc neural
   performance compile details cpucount=&CORE_COUNT threads=yes;
 
   nloptions noprint; /* noprint=do not show weight values */
-  netoptions decay=0.25; /* decay=L2 penalty */
+  netoptions decay=0.1; /* decay=L2 penalty */
 
   archi MLP hidden=5; /* 5-layer network architecture */
   hidden %scan(&HIDDEN_UNIT_LIST, 1, ' ') / id=h1;
@@ -147,7 +147,7 @@ proc neural
 
   /* initialize network */
   /* infan reduces chances of neurons being saturated by random init */
-  initial infan=0.25;
+  initial infan=0.1;
 
   /* pretrain layers seperately */
 
