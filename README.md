@@ -6,4 +6,4 @@ Example code and materials that illustrate applications of SAS machine learning 
 See individual subdirectories for specific examples and instructions. 
 
 Contributors include:
-Patrick Hall and Radhikha Myneni
+Patrick Hall, Radhikha Myneni, Brett Wujek, and Funda Gunes

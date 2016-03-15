@@ -189,7 +189,7 @@ proc neural
   /* layer 1 */
   freeze h1->h2;
   freeze h2->h3;
-  train maxtime=3600 maxiter=100;
+  train maxtime=3600 maxiter=1000;
 
   /* layer 2 */
   freeze i->h1;
