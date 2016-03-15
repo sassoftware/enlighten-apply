@@ -52,7 +52,7 @@ Enter the following statements on the git bash command line:
 `$ git lfs track "*.png"`
 
 
-`$ git remote add origin https://github.com/jphall663/enlighten-apply.git`
+`$ git remote add origin https://github.com/<your username>/enlighten-apply.git`
 
 
 `$ git remote add upstream https://github.com/sassoftware/enlighten-apply.git`
