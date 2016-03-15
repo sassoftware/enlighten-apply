@@ -129,11 +129,11 @@ A deep neural network (DNN) is used classify images as containing cats or as not
 
 ![alt text](README_pics/uniform2.png "Uniform patches")
 
-To use dnn_classifier.sas, you must supply a label file in CSV format with column headers 'orig_name', 'label'. Numeric labels should also be from 1, as loop indexing generally begins with 1 in SAS programs. You must also set the OUT_DIR and LABEL_FILE variables to the appropriate values. Set the OUT_DIR to the output directory created by Python. Set LABEL_FILE to the location of the label file. Then run the entire SAS file.
+To use dnn_classifier.sas, you must supply a label file in CSV format with column headers 'orig_name', 'label'. Numeric labels should also be indexed starting from 1, as loop indexing generally begins with 1 in SAS programs. You must also set the OUT_DIR and LABEL_FILE variables to the appropriate values. Set the OUT_DIR to the output directory created by Python. Set LABEL_FILE to the location of the label file. Then run the entire SAS file.
 
 ```sas
 %let OUT_DIR = /path/to/test_out;
-%let LABEL_FILE = /path/to/labels.csv
+%let LABEL_FILE = /path/to/labels.csv;
 ```
 
 Dnn_classifier.sas will train a deep neural network and plot the results.
