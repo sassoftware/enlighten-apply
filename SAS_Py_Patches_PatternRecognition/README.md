@@ -43,15 +43,6 @@ Enter the following statements on the git bash command line:
 `$ git init`
 
 
-`$ git lfs install`
-
-
-`$ git lfs track "*.jpg"`
-
-
-`$ git lfs track "*.png"`
-
-
 `$ git remote add origin https://github.com/<your username>/enlighten-apply.git`
 
 
@@ -59,6 +50,15 @@ Enter the following statements on the git bash command line:
 
 
 `$ git pull origin master`
+
+
+`$ git lfs install`
+
+
+`$ git lfs track "*.jpg"`
+
+
+`$ git lfs track "*.png"`
 
 
 ### Machine learn some dang cats!
