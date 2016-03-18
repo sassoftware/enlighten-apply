@@ -433,7 +433,7 @@ quit;
 %macro plot(_stat=&STAT, _plot_results=&PLOT_RESULTS);
 
   %if "&_stat" = "MISC" %then %do;
-  	  %if &PLOT_RESULTS %then %do;
+  	  %if &_plot_results %then %do;
 
         * import original images;
         proc import
@@ -448,7 +448,7 @@ quit;
           by orig_name x y;
         run;
 
-	    %plot_labels;
+        %plot_labels;
 
     %end;
 

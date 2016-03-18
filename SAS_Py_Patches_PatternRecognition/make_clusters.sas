@@ -327,7 +327,7 @@ options mprint;
     id x y orig_name size angle;
     performance threads=&CORE_COUNT;
     score out=l.cluster_labels;
-	code file="&OUT_DIR./cluster_score.sas";
+    code file="&OUT_DIR./cluster_score.sas";
     ods output
       abcstats=_abcstats
       abcresults=_abcresults;
