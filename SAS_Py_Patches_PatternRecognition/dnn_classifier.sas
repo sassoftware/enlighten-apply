@@ -42,6 +42,9 @@
 *                    training neural network, float (0,1)                    *;
 * STAT - error measure used to assess neural network                         *;
 *        unquoted string string: ASE or MISC                                 *;
+* PLOT_RESULTS - plot the classification results overlayed onto the original *;
+*                images, not suitable for many input images or extremely     *;
+*                large input images, boolean int, 1 = true                   *;
 ******************************************************************************;
 
 * TODO: user sets constants;
@@ -52,16 +55,23 @@
 %let HIDDEN_UNIT_LIST = 100 50 10;
 %let VALID_PROPORTION = 0.3;
 %let STAT = MISC;
+%let PLOT_RESULTS = 1;
 
 * system options;
 options threads;
-ods html;
+ods html close;
 ods listing;
+
+* start timer;
+%let start = %sysfunc(datetime());
 
 *** import csv ***************************************************************;
 
 * libref to OUT_DIR;
 libname l "&OUT_DIR.";
+
+* woring dir to OUT_DIR;
+x "cd &OUT_DIR";
 
 * import csv;
 proc import
@@ -420,26 +430,32 @@ quit;
 *** plot *********************************************************************;
 * simple utility macro to load originals.csv and conditionally execute; 
 * ploting if a classification task was performed;
-%macro plot(_stat=&STAT);
+%macro plot(_stat=&STAT, _plot_results=&PLOT_RESULTS);
 
   %if "&_stat" = "MISC" %then %do;
+  	  %if &PLOT_RESULTS %then %do;
 
-    * import original images;
-    proc import
-      datafile="&OUT_DIR.\originals.csv"
-      out=l.originals
-      dbms=csv
-      replace;
-    run;
-    proc sort
-      data=l.originals
-      sortsize=MAX;
-      by orig_name x y;
-    run;
+        * import original images;
+        proc import
+          datafile="&OUT_DIR.\originals.csv"
+          out=l.originals
+          dbms=csv
+          replace;
+        run;
+        proc sort
+          data=l.originals
+          sortsize=MAX;
+          by orig_name x y;
+        run;
 
-	%plot_labels;
+	    %plot_labels;
+
+    %end;
 
   %end;
 
 %mend; 
 %plot;
+
+* end timer;
+%put NOTE: Total elapsed time: %sysfunc(putn(%sysevalf(%sysfunc(datetime())-&start), 10.2)) seconds.;

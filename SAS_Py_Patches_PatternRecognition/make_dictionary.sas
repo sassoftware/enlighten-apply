@@ -47,13 +47,19 @@
 
 * system options;
 options threads;
-ods html;
+ods html close;
 ods listing;
+
+* start timer;
+%let start = %sysfunc(datetime());
 
 *** import csv ***************************************************************;
 
 * libref to OUT_DIR;
 libname l "&OUT_DIR.";
+
+* woring dir to OUT_DIR;
+x "cd &OUT_DIR";
 
 * import csv;
 proc import
@@ -192,7 +198,7 @@ proc neural
     outfit=_fit
     estiter=1;
 
-  code file="%sysfunc(pathname(WORK))/autoencoder.sas";
+  code file="%sysfunc(pathname(WORK))/autoencoder_score.sas";
 
 run;
 
@@ -261,3 +267,7 @@ data l.hidden_output;
   %include "%sysfunc(pathname(WORK))/autoencoder.sas" / nosource;
   drop h1: h2: h4: h5: pixel_: _WARN_ P_:;
 run;
+
+* end timer;
+%put NOTE: Total elapsed time: %sysfunc(putn(%sysevalf(%sysfunc(datetime())-&start), 10.2)) seconds.;
+

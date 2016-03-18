@@ -41,6 +41,9 @@
 *       Python script, int                                                   *;
 * MAX_CLUSTERS - maximum number of clusters to test with ABC,                *;
 *                int < 50 suggested                                          *;
+* PLOT_RESULTS - plot the clustering results overlayed onto the original     *;
+*                images, not suitable for many input images or extremely     *;
+*                large input images, boolean int, 1 = true                   *;
 ******************************************************************************;
 
 * TODO: user sets constants;
@@ -48,6 +51,7 @@
 %let OUT_DIR = ;
 %let DIM = 25;
 %let MAX_CLUSTERS = 20;
+%let PLOT_RESULTS = 1;
 
 * system options;
 options threads;
@@ -207,10 +211,16 @@ options mprint;
 * based on the presence of hidden_output.sas7bdat;
 %macro main;
 
+  * start timer;
+  %let start = %sysfunc(datetime());
+
   *** import necessary data;
 
   * libref to OUT_DIR;
   libname l "&OUT_DIR.";
+
+  * working dir to OUT_DIR;
+  x "cd &OUT_DIR";
 
   * if l.hidden_output does not exist;
   * import raw patches;
@@ -317,6 +327,7 @@ options mprint;
     id x y orig_name size angle;
     performance threads=&CORE_COUNT;
     score out=l.cluster_labels;
+	code file="&OUT_DIR./cluster_score.sas";
     ods output
       abcstats=_abcstats
       abcresults=_abcresults;
@@ -335,8 +346,13 @@ options mprint;
   run;
   title;
 
-  *** plot results;
-  %plot_clusters;
+  *** conditionally plot results;
+  %if &PLOT_RESULTS %then %do;
+    %plot_clusters;
+  %end;
+
+  * end timer;
+  %put NOTE: Total elapsed time: %sysfunc(putn(%sysevalf(%sysfunc(datetime())-&start), 10.2)) seconds.;
 
 %mend;
 %main;
