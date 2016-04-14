@@ -18,7 +18,7 @@ limitations under the License.
 
 # Random projections
 
-[!alt text] (https://github.com/sassoftware/enlighten-apply/blob/master/SAS_Random_Projections/random_projections.png "Simple representation of random projections")
+[!alt text](./random_projections.png "Simple representation of random projections")
 
 ===============
 
