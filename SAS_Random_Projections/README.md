@@ -16,7 +16,9 @@ limitations under the License.
 
 ******************************************************************************/
 
-SAS_Random_Projections
+# Random projections
+
+[!alt text] (random_projections.png "Simple representation of random projections")
 
 ===============
 
