@@ -16,8 +16,6 @@ limitations under the License.
 
 ******************************************************************************/
 
-# Random projections
-
 ![alt text](random_projections.png "Simple representation of random projections")
 
 ===============
