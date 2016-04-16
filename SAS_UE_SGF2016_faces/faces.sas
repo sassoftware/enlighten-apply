@@ -39,12 +39,12 @@
 *                                                                            *;
 * instructions:                                                              *;
 * - user set GIT_REPO_DIR to downloaded or cloned SAS_UE_SGF2016_faces       *;
-*   directory containg faces.sas7bdat                                        *;                             *;
+*   directory containg faces.sas7bdat                                        *;
 ******************************************************************************;
 
 *** TODO: user set global constants ******************************************;
 
-%let GIT_REPO_DIR = /folders/myshortcuts/SAS_UE_SGF2016_faces;
+%let GIT_REPO_DIR = ;
 
 *** system options;
 
@@ -162,11 +162,11 @@ data normalizedtrain;
   retain normalface;
   if id = 0 then do;
     do i=1 to 4096;
-      normalface[i]=feature[i];
+      normalface[i] = feature[i];
     end;
   end;
   do i=1 to 4096;
-    normalface[i]=feature[i]-normalface[i];
+    normalface[i] = feature[i]-normalface[i];
   end;
   drop feature1-feature4096 i;
   if id = 0 then delete;
@@ -240,7 +240,7 @@ quit;
 data alltrain;
   length feature 8;
   merge facecolvecs princomps;
-  feature=_n_;
+  feature = _n_;
 run;
 
 *** fit_loadings *************************************************************;
@@ -300,7 +300,7 @@ run;
 
   %do i=1 %to &n;
 
-  %regression_model(id=&i, _ds=&ds, _role=&role);
+    %regression_model(id=&i, _ds=&ds, _role=&role);
 
   %end;
 
@@ -323,11 +323,11 @@ data normalizedtest;
   retain normalface;
   if id = 0 then do;
     do i=1 to 4096;
-      normalface[i]=feature[i];
+      normalface[i] = feature[i];
     end;
   end;
   do i=1 to 4096;
-    normalface[i]=feature[i]-normalface[i];
+    normalface[i] = feature[i]-normalface[i];
   end;
   drop feature1-feature4096 i;
   if id = 0 then delete;
@@ -345,7 +345,7 @@ run;
 data alltest;
   length feature 8;
   merge facecolvecstest princomps;
-  feature=_n_;
+  feature = _n_;
 run;
 
 *** find the loadings of each test face onto the eigenfaces ******************;

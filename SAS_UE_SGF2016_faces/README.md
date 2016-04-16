@@ -61,9 +61,40 @@ Enter the following statements on the git bash command line:
 
 ### Educational eigenfaces example
 
+```sas
+%let GIT_REPO_DIR = /path/to/enlighten-apply/SAS_UE_SGF2016_faces;
+```
+
 #### Preprocessing
 
 ![alt text](README_pics/Slide1.PNG "Preprocessing")
+
+```sas
+proc means data=trainfaces noprint nway;
+  var feature1-feature4096;
+  output out=averageface(drop=_TYPE_ _FREQ_) mean=;
+run;
+```
+
+```sas
+data normalizedtrain;
+  set averageface trainfaces;
+  array feature feature1-feature4096;
+  array normalface normalface1-normalface4096;
+  retain normalface;
+  if id = 0 then do;
+    do i=1 to 4096;
+      normalface[i] = feature[i];
+    end;
+  end;
+  do i=1 to 4096;
+    normalface[i] = feature[i]-normalface[i];
+  end;
+  drop feature1-feature4096 i;
+  if id = 0 then delete;
+  drop id;
+run;
+```
 
 #### Principal component analysis
 
@@ -71,17 +102,56 @@ Enter the following statements on the git bash command line:
 
 ![alt text](README_pics/Slide2.PNG "Creating the covariance matrix")
 
+```sas
+M = A * A`;
+```
+
 ##### Decomposition of the covariance matrix to create eigenfaces
 
 ![alt text](README_pics/Slide3.PNG "Decomposition of the covariance matrix to create eigenfaces")
+
+```sas
+call eigen(eigenvalues, eigenvectors, M);
+```
 
 ##### Using eigenvector loadings to represent face images
 
 ![alt text](README_pics/Slide4.PNG "Using eigenvector loadings to represent face images")
 
+```sas
+ods select parameterestimates;
+proc reg data=&_ds plots=none;
+  model face&id = pc1-pc&NUM_EIGENFACES. / noint;
+  ods output parameterestimates=paramests(keep=variable estimate);
+run;
+```
+
+```sas
+%do i=1 %to &n;
+
+  %regression_model(id=&i, _ds=&ds, _role=&role);
+
+%end;
+```
+
 #### Results
 
 ![alt text](README_pics/results_table.png "Matching new faces to known faces")
+
+```sas
+do i=1 to 40 by 1;
+
+  D = Tr-Ts[,i];
+  distance[,i] = vecdiag(D`*D);
+  _output[i,2] = distance[i,i];
+
+  minindex = distance[>:<,i];
+  _output[i,3] = minindex;
+
+  _output[i,4] = _output[i,2] - distance[minindex,i];
+
+end;
+```
 
 #### Testing
 
