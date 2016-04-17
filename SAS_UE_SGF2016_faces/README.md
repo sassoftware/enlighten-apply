@@ -78,8 +78,6 @@ This is example will run in the free [SAS&reg; University Edition](http://www.sa
 
 #### Preprocessing
 
-![alt text](README_pics/Slide1.PNG "Preprocessing")
-
 As a preprocessing step, the mean face in the train data is subtracted from all the faces in the train data. The MEANS procedure is used to determine the average face.
 
 ```sas
@@ -111,9 +109,11 @@ data normalizedtrain;
 run;
 ```
 
+![alt text](README_pics/Slide1.PNG "Preprocessing")
+
 #### Principal component analysis
 
-The eigenfaces approach uses principal components analysis to create a small number of representative faces in the train data, i.e. the eigenfaces. These representative faces are used as a lower-dimensional model of the train faces. Both the train faces and any new faces can be represented in the low-dimensional space a linear combination of the eigenfaces.
+The eigenfaces approach uses principal components analysis (PCA) to create a small number of representative faces in the train data, i.e. the eigenfaces. These representative faces are used as a lower-dimensional model of the train faces. Both the train faces and any new faces can be represented in the low-dimensional space a linear combination of the eigenfaces.
 
 ##### Creating the covariance matrix
 
@@ -129,18 +129,18 @@ M = A * A`;
 
 ![alt text](README_pics/Slide3.PNG "Decomposition of the covariance matrix to create eigenfaces")
 
+The IML procedure is then used to complete the eigendecomposition of the covariance matrix. 
+
 ```sas
 call eigen(eigenvalues, eigenvectors, M);
 pc = A`*eigenvectors[,1:&NUM_EIGENFACES.];
 ```
 
-The IML procedure is then used to complete the eigendecomposition of the covariance matrix. 
-
-In this simple example, only 6 eigenfaces are used to represent the train data due to the small size of train data. In a more realistic scenario where the train data might contain many more faces, a higher number of eigenfaces would be more appropriate. There are also many other ways to perform principal component analysis using SAS, including the PRINCOMP and HPPRINCOMP procedures.
+In this simple example, only 6 eigenfaces are used to represent the train data due to the small size of train data. In a more realistic scenario where the train data might contain many more faces, a higher number of eigenfaces would be more appropriate. There are also many other ways to perform PCA using SAS, including the PRINCOMP and HPPRINCOMP procedures.
 
 ##### Using eigenvector loadings to represent faces
 
-![alt text](README_pics/Slide4.PNG "Using eigenvector loadings to represent faces")
+To learn how to represent each train face as a low-dimsional linear combination of the eigenfaces, the REG procedure is used to regress each face in the train data against the 6 eigenfaces. The noint option in the model statement prevents the REG procedure from fitting an intercept (or bias) term, resulting in a vector of 6 regression parameters that can be used as a low-dimensional representation of each face in the train data. The ods select statement is used to collect the parameter estimates. A SAS macro is used to run the REG procedure for each train face and to collect the resulting regression parameters in a single SAS data set.
 
 ```sas
 ods select parameterestimates;
@@ -158,11 +158,12 @@ run;
 %end;
 ```
 
-To learn how to represent each train face as a low-dimsional linear combination of the eigenfaces, the REG procedure is used to regress each face in the train data against the 6 eigenfaces. The noint option in the model statement prevents the REG procedure from fitting an intercept (or bias) term, resulting in a vector of 6 regression parameters that can be used as low-dimensional representation of each face in the train data. The ods select stament is used to collect the parameter estimates. A SAS macro is used to run the REG procedure for each train face and to collect the resulting regression parameters in a single SAS data set.
+![alt text](README_pics/Slide4.PNG "Using eigenvector loadings to represent faces")
+
 
 #### Results
 
-To test the accuracy of this simple eigenface model, the test data set is normalized and the REG procedure is used to find the low-dimensional representation of the test faces. The IML procedure is used to calculate the Euclidean distance between the train faces and the test faces, to find the closest test face for each train face, and to calculate the distance to the closest test face. The Euclidean distance in the low-dimensional space between a test face and a train face is used as a measure of similarity between the known train faces and new test faces. The DISTANCE procedure can also be used to caluclate distances in SAS.
+To test the accuracy of this simple eigenface model, the test data set is normalized and the REG procedure is used to find the low-dimensional representation of the test faces. The IML procedure is used to calculate the Euclidean distance between the train faces and the test faces, to find the closest test face to each train face, and to calculate the distance to the closest test face. The Euclidean distance in the low-dimensional space between a test face and a train face is used as a measure of similarity between the known train faces and new test faces. The DISTANCE procedure can also be used to caluclate distances in SAS.
 
 ```sas
 do i=1 to 40 by 1;
@@ -179,7 +180,7 @@ do i=1 to 40 by 1;
 end;
 ```
 
-We can see that the model is very successful at matching some of the train faces to some of the test faces. For the first 3 faces in the train data, it can be seen that the value of the closest_test_image variable matches the value of the train_image_index variable, indicating the corresponding faces from the train and test data are placed closest to one another in the low-dimensional eigenface space. The distance_to_test image variable indicates the Euclidean distance between the corresponding train and test faces. The distance_to_closest_test_image variable will be 0 in the case of an exact match between train and test faces. In the case where train and test faces are not matched exactly, the value of the distance_to_closest_test_image will be greater than 0 indicating that some other face in test data was closest to the train face.
+We can see that the model is very successful at matching some of the train faces to some of the test faces in the table below. For the first 3 faces in the train data, it can be seen that the value of the closest_test_image variable matches the value of the train_image_index variable, indicating the corresponding faces from the train and test data are placed closest to one another in the low-dimensional eigenface space. The distance_to_test image variable indicates the Euclidean distance between the corresponding train and test faces. The distance_to_closest_test_image variable will be 0 in the case of an exact match between train and test faces. In the case where train and test faces are not matched exactly, the value of the distance_to_closest_test_image will be greater than 0 and less than distance_to_test indicating that some other face in test data was closest to the train face.
 
 ![alt text](README_pics/results_table.png "Matching new faces to known faces")
 
@@ -192,4 +193,5 @@ This example was tested in the following environment:
 * Windows 7 Enterprise
 * Intel i7-5600U @ 2.60 GHz
 * 16 GB RAM
+* VMware Fusion Player
 * SAS University Edition
