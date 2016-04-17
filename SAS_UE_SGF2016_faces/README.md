@@ -78,6 +78,8 @@ This is example will run in the free [SAS&reg; University Edition](http://www.sa
 
 #### Preprocessing
 
+![alt text](README_pics/Slide1.PNG "Preprocessing")
+
 As a preprocessing step, the mean face in the train data is subtracted from all the faces in the train data. The MEANS procedure is used to determine the average face.
 
 ```sas
@@ -109,8 +111,6 @@ data normalizedtrain;
 run;
 ```
 
-![alt text](README_pics/Slide1.PNG "Preprocessing")
-
 #### Principal component analysis
 
 The eigenfaces approach uses principal components analysis (PCA) to create a small number of representative faces in the train data, i.e. the eigenfaces. These representative faces are used as a lower-dimensional model of the train faces. Both the train faces and any new faces can be represented in the low-dimensional space a linear combination of the eigenfaces.
@@ -140,7 +140,9 @@ In this simple example, only 6 eigenfaces are used to represent the train data d
 
 ##### Using eigenvector loadings to represent faces
 
-To learn how to represent each train face as a low-dimsional linear combination of the eigenfaces, the REG procedure is used to regress each face in the train data against the 6 eigenfaces. The noint option in the model statement prevents the REG procedure from fitting an intercept (or bias) term, resulting in a vector of 6 regression parameters that can be used as a low-dimensional representation of each face in the train data. The ods select statement is used to collect the parameter estimates. A SAS macro is used to run the REG procedure for each train face and to collect the resulting regression parameters in a single SAS data set.
+![alt text](README_pics/Slide4.PNG "Using eigenvector loadings to represent faces")
+
+To learn how to represent each train face as a low-dimsional linear combination of the eigenfaces, the REG procedure is used to regress each face in the train data against the 6 eigenfaces. The noint option in the model statement prevents the REG procedure from fitting an intercept (or bias) term, resulting in a vector of 6 regression parameters that can be used as a low-dimensional representation of each face in the train data. The ods select statement is used to collect the parameter estimates.
 
 ```sas
 ods select parameterestimates;
@@ -150,6 +152,8 @@ proc reg data=&_ds plots=none;
 run;
 ```
 
+A SAS macro is used to run the REG procedure for each train face and to collect the resulting regression parameters in a single SAS data set.
+
 ```sas
 %do i=1 %to &n;
 
@@ -157,9 +161,6 @@ run;
 
 %end;
 ```
-
-![alt text](README_pics/Slide4.PNG "Using eigenvector loadings to represent faces")
-
 
 #### Results
 
