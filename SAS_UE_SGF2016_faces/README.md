@@ -187,12 +187,12 @@ We can see that the model is very successful at matching some of the train faces
 
 A close inspection of the results will reveal that most test faces are not matched exactly to the corresponding face in the train data. However, the simple eigenfaces model does generally place corresponding train and test faces very close to one another in the low-dimensional eigenface space. Increasing the amount of train data and the number of eigenfaces would likely increase the classification accuracy of this simple model.
 
-#### Testing
+## Testing
 
 This example was tested in the following environment:
 
 * Windows 7 Enterprise
 * Intel i7-5600U @ 2.60 GHz
 * 16 GB RAM
-* VMware Fusion Player
+* VMware Workstation 12 Player
 * SAS University Edition
