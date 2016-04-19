@@ -71,7 +71,7 @@ This is data stored in a presentation style format, where multiple measure colum
 
 ![alt text](README_pics/TidyData1.png "Messy Data Scenario 1")
 
-[Example SAS Code]()
+[Example SAS Code](https://github.com/sassoftware/enlighten-apply/blob/master/SAS_UE_TidyData/tidy1.sas)
 
 #### Messy Data Scenario 2: Multiple dimension variables stored in one column
 
@@ -79,7 +79,7 @@ This is data where a column contains values for multiple dimension variables.
 
 ![alt text](README_pics/TidyData2.png "Messy Data Scenario 2")
 
-[Example SAS Code]()
+[Example SAS Code](https://github.com/sassoftware/enlighten-apply/blob/master/SAS_UE_TidyData/tidy2.sas)
 
 #### Messy Data Scenario 3: Dimension values stored as column names and measure variables stored in rows
 
@@ -87,7 +87,7 @@ This is data stored in a presentation style format, where multiple measure colum
 
 ![alt text](README_pics/TidyData3.png "Messy Data Scenario 3")
 
-[Example SAS Code]()
+[Example SAS Code](https://github.com/sassoftware/enlighten-apply/blob/master/SAS_UE_TidyData/tidy3.sas)
 
 ## Testing
 
