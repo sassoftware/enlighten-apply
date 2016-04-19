@@ -61,9 +61,13 @@ Enter the following statements on the git bash command line:
 
 ### Tidy data examples
 
-This repository contains three SAS programs which allow you to tidy your messy data. Tidying data is a structured process meant to address common analytical data quality problems. These SAS macros do not use Hadley Wickham's original terminology, but instead try to represent the Tidy Data process in a format most native to SAS programming.
+This repository contains three SAS programs which allow you to tidy your messy data. Tidying data is a structured process meant to address common analytical data quality problems. These SAS macros do not use all of Hadley Wickham's original terminology, but instead try to represent the Tidy Data process in a format most native to SAS programming.
 
-Detailed information about Tidy Data is presented by Hadley Wickham in the article entitled “Tidy Data” from The Journal of Statistical Software, Vol. 59, Issue 10 (August 2014), https://www.jstatsoft.org/article/view/v059i10. Specifically, these SAS programs address Sections 3.1, 3.2, and 3.3 in that article.
+Detailed information about Tidy Data is presented by Hadley Wickham in the article entitled “Tidy Data” from The Journal of Statistical Software, Vol. 59, Issue 10 (August 2014), https://www.jstatsoft.org/article/view/v059i10. 
+
+Specifically, these SAS programs address Sections 3.1, 3.2, and 3.3 in that article.
+
+This example will run in the free [SAS&reg; University Edition](http://www.sas.com/en_us/software/university-edition.html).
 
 #### Messy Data Scenario 1: Dimension values stored as column names
 

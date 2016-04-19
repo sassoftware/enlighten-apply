@@ -70,7 +70,7 @@ To get started you must set the location of the face data at the top of the face
 %let GIT_REPO_DIR = /path/to/enlighten-apply/SAS_UE_SGF2016_faces;
 ```
 
-This is example will run in the free [SAS&reg; University Edition](http://www.sas.com/en_us/software/university-edition.html). If you are using the SAS University Edition to run this example, a convenient way to setup the example is to direct a shared folder of your virtual machine to the SAS_UE_SGF2016_faces folder. If you do so, you will likely set the GIT_REPO_DIR macro variable to the /folders/myshortcuts/SAS_UE_SGF2016_faces folder.
+This example will run in the free [SAS&reg; University Edition](http://www.sas.com/en_us/software/university-edition.html). If you are using the SAS University Edition to run this example, a convenient way to setup the example is to direct a shared folder of your virtual machine to the SAS_UE_SGF2016_faces folder. If you do so, you will likely set the GIT_REPO_DIR macro variable to the /folders/myshortcuts/SAS_UE_SGF2016_faces folder.
 
 ```sas
 %let GIT_REPO_DIR = /folders/myshortcuts/SAS_UE_SGF2016_faces;
@@ -113,7 +113,7 @@ run;
 
 #### Principal component analysis
 
-The eigenfaces approach uses principal components analysis (PCA) to create a small number of representative faces in the train data, i.e. the eigenfaces. These representative faces are used as a lower-dimensional model of the train faces. Both the train faces and any new faces can be represented in the low-dimensional space a linear combination of the eigenfaces.
+The eigenfaces approach uses principal components analysis (PCA) to create a small number of representative faces in the train data, i.e. the eigenfaces. These representative faces are used as a lower-dimensional model of the train faces. Both the train faces and any new faces can be represented in the low-dimensional space by a linear combination of the eigenfaces.
 
 ##### Creating the covariance matrix
 
@@ -181,7 +181,7 @@ do i=1 to 40 by 1;
 end;
 ```
 
-We can see that the model is very successful at matching some of the train faces to some of the test faces in the table below. For the first 3 faces in the train data, it can be seen that the value of the closest_test_image variable matches the value of the train_image_index variable, indicating the corresponding faces from the train and test data are placed closest to one another in the low-dimensional eigenface space. The distance_to_test image variable indicates the Euclidean distance between the corresponding train and test faces. The distance_to_closest_test_image variable will be 0 in the case of an exact match between train and test faces. In the case where train and test faces are not matched exactly, the value of the distance_to_closest_test_image will be greater than 0 and less than distance_to_test indicating that some other face in test data was closest to the train face.
+We can see that the model is very successful at matching some of the train faces to some of the test faces in the table below. For the first 3 faces in the train data, it can be seen that the value of the closest_test_image variable matches the value of the train_image_index variable, indicating the corresponding faces from the train and test data are placed closest to one another in the low-dimensional eigenface space. The distance_to_test image variable indicates the Euclidean distance between the corresponding train and test faces. The distance_to_closest_test_image variable will be 0 in the case of an exact match between train and test faces. In the case where train and test faces are not matched exactly, the value of the distance_to_closest_test_image will be greater than 0 and less than distance_to_test_image indicating that some other face in test data was closest to the train face.
 
 ![alt text](README_pics/results_table.png "Matching new faces to known faces")
 
