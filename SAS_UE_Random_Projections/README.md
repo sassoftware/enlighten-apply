@@ -24,6 +24,9 @@ Code and materials for a basic example of random projections using Base SAS and
 SAS/STAT. Accompanies the Machine Learning with Wide Data using SAS
 presentation at the Analytics2015 conference.
 
+
+This example will run in the free [SAS&reg; University Edition](http://www.sas.com/en_us/software/university-edition.html).
+
 INSTRUCTIONS
 
 1.) Clone or download the enlighten-apply repo from
