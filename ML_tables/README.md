@@ -3,7 +3,9 @@
 PNG tables with brief summaries and best practices for machine learning and data mining tasks.
 
 For PDF versions please see:
+
 Best Practices Quick Reference - https://support.sas.com/rnd/app/data-mining/enterprise-miner/pdfs/Machine_Learning_Quick_Ref_Best_Practices.pdf
+
 Algorithms Quick Reference - http://support.sas.com/rnd/app/data-mining/enterprise-miner/pdfs/Machine_Learning_Quick_Ref_Algorithms.pdf
 
 For more information regarding applied machine learning best practices, please see:
