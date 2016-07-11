@@ -14,6 +14,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied
 See the License for the specific language governing permissions and 
 limitations under the License.
 
+## SGF 2016 White Paper 
+
+http://support.sas.com/resources/papers/proceedings16/SAS3100-2016.pdf
+
 ## Instructions
 
 ### Install required software 

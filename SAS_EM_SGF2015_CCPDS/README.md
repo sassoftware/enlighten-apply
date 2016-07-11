@@ -16,7 +16,9 @@ limitations under the License.
 ******************************************************************************/
 
 Code and materials for a solution to the Spring 2014 Cloudera Data Science
-Challenge
+Challenge. 
+
+White paper available at: https://support.sas.com/resources/papers/proceedings15/SAS2520-2015.pdf
 
 ========================
 
