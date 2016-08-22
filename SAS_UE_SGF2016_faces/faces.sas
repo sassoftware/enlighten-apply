@@ -44,7 +44,7 @@
 
 *** TODO: user set global constants ******************************************;
 
-%let GIT_REPO_DIR = ;
+%let GIT_REPO_DIR = C:\workspace\enlighten-apply\SAS_UE_SGF2016_faces;
 
 *** system options;
 
@@ -157,18 +157,19 @@ data averageface;
 run;
 data normalizedtrain;
   set averageface trainfaces;
-  array feature feature1-feature4096;
+  array aveface avefeature1-avefeature4096;
   array normalface normalface1-normalface4096;
-  retain normalface;
+  array feature feature1-feature4096;
+  retain aveface;
   if id = 0 then do;
     do i=1 to 4096;
-      normalface[i] = feature[i];
+      aveface[i] = feature[i];
     end;
   end;
   do i=1 to 4096;
-    normalface[i] = feature[i]-normalface[i];
+    normalface[i] = feature[i]-aveface[i];
   end;
-  drop feature1-feature4096 i;
+  drop feature1-feature4096 avefeature1-avefeature4096 i;
   if id = 0 then delete;
   drop id;
 run;
@@ -233,172 +234,3 @@ quit;
   prefix=feature,
   title=Eigenface Image
 );
-
-*** find the loadings of each train face onto the eigenfaces *****************;
-
-* create a train set;
-data alltrain;
-  length feature 8;
-  merge facecolvecs princomps;
-  feature = _n_;
-run;
-
-*** fit_loadings *************************************************************;
-* finds the loadings of each face image onto each eigenface;
-* using linear regression;
-* the loadings are the reduced representation of the faces;
-* ds - data set containing face images and eigenfaces as column vectors;
-* role - train or test as unquoted string;
-* n - number of images in data;
-
-%macro fit_loadings(ds= , role=, n=);
-
-  * initialize a data set to hold all loadings;
-  proc datasets lib=work nolist nowarn nodetails;
-    delete all&role.weights;
-  quit;
-  data all&role.weights;
-    length variable $9;
-    do i=1 to &NUM_EIGENFACES;
-      variable = 'pc'||strip(put(i, best.));
-      drop i;
-      output;
-    end;
-  run;
-  proc sort sortseq=linguistic(numeric_collation=on);
-    by variable; /* ensure correct order */
-  run;
-
-  %macro regression_model(id=, _ds=, _role=);
-
-    * regress each face against each eigenface;
-    ods select parameterestimates;
-    proc reg data=&_ds plots=none;
-      model face&id = pc1-pc&NUM_EIGENFACES. / noint;
-      ods output parameterestimates=paramests(keep=variable estimate);
-    run;
-
-    data paramests&id;
-      set paramests;
-      estimate&id = estimate;
-      drop estimate;
-    run;
-    proc sort sortseq=linguistic(numeric_collation=on);
-      by variable; /* ensure correct order */
-    run;
-
-    * set to contain all loadings;
-    data all&_role.weights;
-      merge all&_role.weights paramests&id;
-      by variable;
-    run;
-    proc sort sortseq=linguistic(numeric_collation=on);
-      by variable; /* ensure correct order */
-    run;
-
-  %mend regression_model;
-
-  %do i=1 %to &n;
-
-    %regression_model(id=&i, _ds=&ds, _role=&role);
-
-  %end;
-
-  proc datasets lib=work nolist nowarn nodetails;
-    delete paramests paramests: ;
-  run;
-
-%mend;
-
-%fit_loadings(ds=alltrain, role=train, n=40);
-
-*** prepare test data ********************************************************;
-
-* normalize each row vector (e.g. face vector);
-* by subtracting the average of all rows;
-data normalizedtest;
-  set averageface testfaces ;
-  array feature feature1-feature4096;
-  array normalface normalface1-normalface4096;
-  retain normalface;
-  if id = 0 then do;
-    do i=1 to 4096;
-      normalface[i] = feature[i];
-    end;
-  end;
-  do i=1 to 4096;
-    normalface[i] = feature[i]-normalface[i];
-  end;
-  drop feature1-feature4096 i;
-  if id = 0 then delete;
-  drop id;
-run;
-
-* transpose faces to column vectors;
-proc transpose
-  data=normalizedtest
-  out=facecolvecstest(drop=_NAME_)
-  prefix=face;
-run;
-
-* merge test face vectors with eigenfaces;
-data alltest;
-  length feature 8;
-  merge facecolvecstest princomps;
-  feature = _n_;
-run;
-
-*** find the loadings of each test face onto the eigenfaces ******************;
-
-%fit_loadings(ds=alltest, role=test, n=40);
-
-*** test the performance of the eigenface model ******************************;
-
-proc iml;
-
-  * read alltrainweights into matrix;
-  use alltrainweights;
-  read all var _ALL_ into Tr [colname=varnames];
-  close alltrainweights;
-
-  * read alltestweights into matrix;
-  use alltestweights;
-  read all var _ALL_ into Ts [colname=varnames];
-  close alltestweights;
-
-  * initialize output and distance matrices;
-  _output = j(40, 4, 0);
-  _x = 1:40;
-  _output[,1]=_x`;
-
-  distance = j(40, 40 ,0);
-
-  * calculate distance between each reduced train and test image;
-  * for each train image find the closest test image;
-  * calculate the distance to this closest test image;
-  do i=1 to 40 by 1;
-
-    D = Tr-Ts[,i];
-    distance[,i] = vecdiag(D`*D);
-    _output[i,2] = distance[i,i];
-
-    minindex = distance[>:<,i];
-    _output[i,3] = minindex;
-
-    _output[i,4] = _output[i,2] - distance[minindex,i];
-
-  end;
-
-  * create a SAS data set containing results;
-  varnames = {"train_image_index" "distance_to_test_image"
-    "closest_test_image" "distance_to_closest_test_image"};
-  create output from _output[colname=varnames];
-  append from _output;
-  close output;
-
-quit;
-
-* print some results;
-proc print data=output; 
-  where train_image_index le 3;
-run;

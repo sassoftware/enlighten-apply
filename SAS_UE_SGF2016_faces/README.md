@@ -138,55 +138,6 @@ pc = A`*eigenvectors[,1:&NUM_EIGENFACES.];
 
 In this simple example, only 6 eigenfaces are used to represent the train data due to the small size of train data. In a more realistic scenario where the train data might contain many more faces, a higher number of eigenfaces would be more appropriate. There are also many other ways to perform PCA using SAS, including the PRINCOMP and HPPRINCOMP procedures.
 
-##### Using eigenvector loadings to represent faces
-
-![alt text](README_pics/Slide4.PNG "Using eigenvector loadings to represent faces")
-
-To learn how to represent each train face as a low-dimsional linear combination of the eigenfaces, the REG procedure is used to regress each face in the train data against the 6 eigenfaces. The noint option in the model statement prevents the REG procedure from fitting an intercept (or bias) term, resulting in a vector of 6 regression parameters that can be used as a low-dimensional representation of each face in the train data. The ods select statement is used to collect the parameter estimates.
-
-```sas
-ods select parameterestimates;
-proc reg data=&_ds plots=none;
-  model face&id = pc1-pc&NUM_EIGENFACES. / noint;
-  ods output parameterestimates=paramests(keep=variable estimate);
-run;
-```
-
-A SAS macro is used to run the REG procedure for each train face and to collect the resulting regression parameters in a single SAS data set.
-
-```sas
-%do i=1 %to &n;
-
-  %regression_model(id=&i, _ds=&ds, _role=&role);
-
-%end;
-```
-
-#### Results
-
-To test the accuracy of this simple eigenface model, the test data set is normalized and the REG procedure is used to find the low-dimensional representation of the test faces. The IML procedure is used to calculate the Euclidean distance between the train faces and the test faces, to find the closest test face to each train face, and to calculate the distance to the closest test face. The Euclidean distance in the low-dimensional space between a test face and a train face is used as a measure of similarity between the known train faces and new test faces. The DISTANCE procedure can also be used to caluclate distances in SAS.
-
-```sas
-do i=1 to 40 by 1;
-
-  D = Tr-Ts[,i];
-  distance[,i] = vecdiag(D`*D);
-  _output[i,2] = distance[i,i];
-
-  minindex = distance[>:<,i];
-  _output[i,3] = minindex;
-
-  _output[i,4] = _output[i,2] - distance[minindex,i];
-
-end;
-```
-
-We can see that the model is very successful at matching some of the train faces to some of the test faces in the table below. For the first 3 faces in the train data, it can be seen that the value of the closest_test_image variable matches the value of the train_image_index variable, indicating the corresponding faces from the train and test data are placed closest to one another in the low-dimensional eigenface space. The distance_to_test image variable indicates the Euclidean distance between the corresponding train and test faces. The distance_to_closest_test_image variable will be 0 in the case of an exact match between train and test faces. In the case where train and test faces are not matched exactly, the value of the distance_to_closest_test_image will be greater than 0 and less than distance_to_test_image indicating that some other face in test data was closest to the train face.
-
-![alt text](README_pics/results_table.png "Matching new faces to known faces")
-
-A close inspection of the results will reveal that most test faces are not matched exactly to the corresponding face in the train data. However, the simple eigenfaces model does generally place corresponding train and test faces very close to one another in the low-dimensional eigenface space. Increasing the amount of train data and the number of eigenfaces would likely increase the classification accuracy of this simple model.
-
 ## Testing
 
 This example was tested in the following environment:
