@@ -47,7 +47,7 @@ To get started you must set the location of the face data at the top of the Eige
 This example uses principle component analysis (PCA) to represent the faces in a lower-dimensional space and then builds a regression based classifier to identify a person. There are four major steps.
 
 1. Convert each image (64x64) into a 1x4096 vector and load the data to your CAS session.
-2. Partition the data into train and validation set. 9 out of 10 images from each person are used as training data through a random draw, and the remainin one is used as validation.
+2. Partition the data into train and validation sets. 9 out of 10 images from each person are used as training data through a random draw, and the remaining image is used as validation.
 3. Calculate the PCs and the weights on the top 310 PCs for each image in the training set. Score the validation set by projecting the validation data onto the selected PCs. The images are represented in a lower-dimensional space.
 4. Build a regression based classifier with the reduced dimensions and predict the personID.
 
