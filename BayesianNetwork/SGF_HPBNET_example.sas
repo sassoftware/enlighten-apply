@@ -125,7 +125,7 @@ run;
               pathdiagram fromid=_parentnode_ toid=_childnode_ /
               arrangement=GRIP
               nodeid=_nodeid_
-              nodelabel=_nodeID_
+              nodetitle=_nodeID_
               nodeshape=_shape_
               nodepriority=_nodepriority_
               linkdirection=_linkdirection_
