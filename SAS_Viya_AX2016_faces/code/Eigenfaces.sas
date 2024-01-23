@@ -21,10 +21,10 @@
 %let NUM_EIGENFACES = 310;
 libname faces "&git_repo_dir";
 
-options casuser=ruzhan cashost='<host>' casport=<port>;
+options casuser=<userid> cashost='<host>' casport=<port>;
 options casinstall='/opt/vb005/laxno/TKGrid';
 
-cas mysess1 host="rdcgrd001" port=xxxxx user=xxxxx;
+cas mysess1 host="<host>" port=<port> user=<userid>;
 
 libname mycas sasioca sessref=mysess1 ;
 
