@@ -21,7 +21,7 @@
 %let NUM_EIGENFACES = 310;
 libname faces "&git_repo_dir";
 
-options casuser=ruzhan cashost='rdcgrd001.unx.sas.com' casport=13333;
+options casuser=ruzhan cashost='<host>' casport=<port>;
 options casinstall='/opt/vb005/laxno/TKGrid';
 
 cas mysess1 host="rdcgrd001" port=xxxxx user=xxxxx;
@@ -37,8 +37,8 @@ proc partition data=mycas.allfaces samppct = 10 partind ;
     output out=mycas.allfacespart ;
 run;
 
-proc pca data=mycas.allfacespart(where=(_PartInd_=1)) 
-              n=&NUM_EIGENFACES method=NIPALS (noscale); 
+proc pca data=mycas.allfacespart(where=(_PartInd_=1))
+              n=&NUM_EIGENFACES method=NIPALS (noscale);
     var feature1-feature4096;
     display /excludeall;
     displayout Loadings=loadings;
